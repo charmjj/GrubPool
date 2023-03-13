@@ -80,7 +80,7 @@ class OcrActivity : AppCompatActivity() {
         startActivityForResult(takePictureIntent, cameraRequest)
     }
 
-    fun extractTextFromImage(bitmap: Bitmap) {
+    private fun extractTextFromImage(bitmap: Bitmap) {
         logger.info("Extracting text from image...")
         val image = InputImage.fromBitmap(bitmap, 0)
         recognizer.process(image).addOnSuccessListener { visionText ->
