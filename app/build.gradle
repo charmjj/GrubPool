@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'cs461.g2t10.grubpool'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "cs461.g2t10.grubpool"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
