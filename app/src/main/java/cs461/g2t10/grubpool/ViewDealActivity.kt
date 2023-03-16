@@ -34,8 +34,8 @@ class ViewDealActivity : AppCompatActivity() {
 
     }
 
-    // Checkout Food Deal
-    fun checkout(view: View) {
+    // Get Directions to shop via Google Maps API
+    fun getDirections(view: View) {
 
     }
 }

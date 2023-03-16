@@ -29,8 +29,8 @@
         android:textColor="#1E1E1E"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.987"
-        tools:layout_editor_absoluteX="-142dp" />
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/item"
@@ -50,10 +50,9 @@
         android:id="@+id/locationHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="31dp"
         android:layout_marginTop="24dp"
-        android:text="Your Location"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.095"
+        android:text="Location"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item" />
 
@@ -61,10 +60,9 @@
         android:id="@+id/itemLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="31dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.087"
+        android:text="181 Orchard Road Orchard Central, Singapore 238896"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/locationHeader" />
 
@@ -72,10 +70,9 @@
         android:id="@+id/shopNameHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="31dp"
         android:layout_marginTop="24dp"
         android:text="Shop Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemLocation" />
 
@@ -83,10 +80,9 @@
         android:id="@+id/itemShopName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="31dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.087"
+        android:text="Don Don Donki Orchard Central"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shopNameHeader" />
 
@@ -94,10 +90,9 @@
         android:id="@+id/itemNameHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="31dp"
         android:layout_marginTop="24dp"
         android:text="Item Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemShopName" />
 
@@ -105,10 +100,9 @@
         android:id="@+id/itemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="31dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.087"
+        android:text="Omu Rice Set (Pork Contained)"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemNameHeader" />
 
@@ -116,10 +110,9 @@
         android:id="@+id/itemDescHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="31dp"
         android:layout_marginTop="24dp"
         android:text="Description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemName" />
 
@@ -127,10 +120,9 @@
         android:id="@+id/itemDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="31dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.087"
+        android:text="Japanese Omelette Rice with Pork"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemDescHeader" />
 
@@ -164,8 +156,6 @@
             android:layout_marginTop="15dp"
             android:layout_weight=".50"
             android:text="Discount"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.087"
             app:layout_constraintStart_toStartOf="parent" />
 
     </LinearLayout>
@@ -187,20 +177,18 @@
             android:layout_marginLeft="32dp"
             android:layout_marginTop="8dp"
             android:layout_weight=".50"
-            android:text="TextView"
+            android:text="$4.50"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.095"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/itemDiscount"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_marginTop="8dp"
             android:layout_weight=".50"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.087"
+            android:text="40%"
             app:layout_constraintStart_toStartOf="parent" />
 
     </LinearLayout>
@@ -210,8 +198,8 @@
         android:layout_width="335dp"
         android:layout_height="58dp"
         android:textColor="@color/black"
-        android:text="Checkout Item"
-        android:onClick="checkout"
+        android:text="Get Directions"
+        android:onClick="getDirections"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
