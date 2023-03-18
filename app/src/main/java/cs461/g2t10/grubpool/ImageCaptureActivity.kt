@@ -81,7 +81,7 @@ class ImageCaptureActivity : AppCompatActivity() {
 
         val stream: FileOutputStream = this.openFileOutput(currentPhotoPath, Context.MODE_PRIVATE)
         val bitmap: Bitmap = imageBitmap
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
         stream.close()
 
         ocrIntent.putExtra("imageFilePath", currentPhotoPath)
