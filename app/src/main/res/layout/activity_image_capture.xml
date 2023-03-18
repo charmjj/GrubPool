@@ -7,19 +7,39 @@
     android:orientation="vertical"
     tools:context=".ImageCaptureActivity">
 
-    <Button
-        android:id="@+id/snapButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Snap" />
+        android:layout_marginBottom="40dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/snapButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="80dp"
+            android:gravity="center"
+            android:text="Snap" />
+
+        <Button
+            android:id="@+id/continueButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:gravity="center"
+            android:backgroundTint="@color/appGreen"
+            android:onClick="onContinue"
+            android:text="Continue" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageDisplay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/snapButton"
+        android:layout_above="@+id/buttonLayout"
         android:layout_alignParentTop="true"
         android:src="@drawable/ic_launcher_foreground" />
 </RelativeLayout>
