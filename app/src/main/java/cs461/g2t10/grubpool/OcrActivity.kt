@@ -23,61 +23,10 @@ class OcrActivity : AppCompatActivity() {
     // Variables associated with OCR library
     private var recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-    // Variables associated with Camera widget
-    private val cameraRequest = 1
-    lateinit var imageView: ImageView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         logger.level = Level.ALL
         setContentView(R.layout.activity_ocr)
-
-        if (
-            ContextCompat.checkSelfPermission(
-                applicationContext,
-                android.Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
-            ActivityCompat.requestPermissions(
-                this, arrayOf(android.Manifest.permission.CAMERA), cameraRequest
-            )
-        } else {
-            dispatchTakePictureIntent()
-        }
-
-        imageView = findViewById(R.id.cameraWidget)
-        val captureButton: Button = findViewById(R.id.captureButton)
-        captureButton.setOnClickListener {
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(cameraIntent, cameraRequest)
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == cameraRequest) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                dispatchTakePictureIntent()
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == cameraRequest && resultCode == RESULT_OK) {
-            val photo: Bitmap = data?.extras?.get("data") as Bitmap
-            imageView.setImageBitmap(photo)
-
-            extractTextFromImage(photo)
-        }
-    }
-
-    private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(takePictureIntent, cameraRequest)
     }
 
     private fun extractTextFromImage(bitmap: Bitmap) {
@@ -103,7 +52,6 @@ class OcrActivity : AppCompatActivity() {
             }
         }.addOnFailureListener { e ->
             logger.log(Level.SEVERE, "An error occurred while processing the image", e)
-            Toast.makeText(this, "Failed to recognize text from image", Toast.LENGTH_SHORT).show()
         }
     }
 }
