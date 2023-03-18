@@ -8,15 +8,15 @@
 
     <ImageView
         android:id="@+id/dealImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="168dp"
+        android:layout_height="174dp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.144"
+        app:layout_constraintVertical_bias="0.084"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
     <TextView
@@ -56,7 +56,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="31dp"
         android:text="Location"
-        android:textColor="#696969"
+        android:textColor="@color/grey"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item" />
 
@@ -68,8 +68,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="31dp"
         android:background="@drawable/textlines"
-        android:text="181 Orchard Road Orchard Central, Singapore 238896"
+        android:hint="Enter a location for this item"
         android:textColor="@color/black"
+        android:textColorHint="@color/grey"
         android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/locationHeader" />
@@ -82,7 +83,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="31dp"
         android:text="Shop Name"
-        android:textColor="#696969"
+        android:textColor="@color/grey"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemLocation" />
 
@@ -94,8 +95,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="31dp"
         android:background="@drawable/textlines"
-        android:text="Don Don Donki Orchard Central"
+        android:hint="Enter your shop name"
         android:textColor="@color/black"
+        android:textColorHint="@color/grey"
         android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shopNameHeader" />
@@ -108,7 +110,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="31dp"
         android:text="Item Name"
-        android:textColor="#696969"
+        android:textColor="@color/grey"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemShopName" />
 
@@ -120,8 +122,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="31dp"
         android:background="@drawable/textlines"
-        android:text="Omu Rice Set (Pork Contained)"
+        android:hint="Enter the yummy name of your food"
         android:textColor="@color/black"
+        android:textColorHint="@color/grey"
         android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemNameHeader" />
@@ -134,7 +137,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="31dp"
         android:text="Description"
-        android:textColor="#696969"
+        android:textColor="@color/grey"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemName" />
 
@@ -146,8 +149,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="31dp"
         android:background="@drawable/textlines"
-        android:text="Japanese Omelette Rice with Pork"
+        android:hint="Enter a description of this snacc (Optional)"
         android:textColor="@color/black"
+        android:textColorHint="@color/grey"
         android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemDescHeader" />
@@ -171,7 +175,7 @@
             android:layout_marginTop="15dp"
             android:layout_weight=".50"
             android:text="Price ($SGD)"
-            android:textColor="#696969"
+            android:textColor="@color/grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.095"
             app:layout_constraintStart_toStartOf="parent" />
@@ -183,7 +187,7 @@
             android:layout_marginTop="15dp"
             android:layout_weight=".50"
             android:text="Discount (%)"
-            android:textColor="#696969"
+            android:textColor="@color/grey"
             app:layout_constraintStart_toStartOf="parent" />
 
     </LinearLayout>
@@ -207,9 +211,10 @@
             android:layout_marginRight="48dp"
             android:layout_weight=".50"
             android:background="@drawable/textlines"
+            android:hint="Discounted price"
             android:inputType="numberDecimal"
-            android:text="4.50"
             android:textColor="@color/black"
+            android:textColorHint="@color/grey"
             android:textSize="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.095"
@@ -223,16 +228,17 @@
             android:layout_marginRight="48dp"
             android:layout_weight=".50"
             android:background="@drawable/textlines"
+            android:hint="Discount percentage"
             android:inputType="numberDecimal"
-            android:text="40"
             android:textColor="@color/black"
+            android:textColorHint="@color/grey"
             android:textSize="14dp"
             app:layout_constraintStart_toStartOf="parent" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/checkoutButton"
+        android:id="@+id/submitButton"
         android:layout_width="335dp"
         android:layout_height="58dp"
         android:background="@drawable/rounded_corner"

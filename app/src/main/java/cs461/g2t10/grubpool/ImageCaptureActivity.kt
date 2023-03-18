@@ -60,7 +60,6 @@ class ImageCaptureActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == cameraRequest && resultCode == RESULT_OK) {
             var capturedImageBitmap = data!!.extras!!.get("data") as Bitmap
-            capturedImageBitmap = increaseImageResolution(capturedImageBitmap)
             imageView.setImageBitmap(capturedImageBitmap)
             imageBitmap = capturedImageBitmap
 
@@ -108,11 +107,5 @@ class ImageCaptureActivity : AppCompatActivity() {
         // Create an image file name
         val timestamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         currentPhotoPath = "YUMMERZ_${timestamp}_.png"
-    }
-
-    private fun increaseImageResolution(image: Bitmap): Bitmap {
-        val width = image.width * 2
-        val height = image.height * 2
-        return Bitmap.createScaledBitmap(image, width, height, true)
     }
 }
