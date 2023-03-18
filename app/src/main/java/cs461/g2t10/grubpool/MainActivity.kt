@@ -3,6 +3,7 @@ package cs461.g2t10.grubpool
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    fun shareGrub() {
+    fun shareGrub(view: View) {
         val shareGroupIntent = Intent(this, ImageCaptureActivity::class.java)
         startActivity(shareGroupIntent)
     }
