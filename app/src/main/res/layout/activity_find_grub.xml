@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,7 +17,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom"
         android:orientation="horizontal"
         android:padding="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -43,7 +45,30 @@
             android:background="@drawable/circle_button"
             android:drawableTop="@drawable/ic_outline_filter"
             android:paddingTop="7dp" />
-
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <fragment
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="0dp"
+        android:layout_marginTop="350dp"
+        app:behavior_skipCollapsed="true"
+        android:id="@+id/filterPanel"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:name="cs461.g2t10.grubpool.FindGrubFilteringPanel"
+        />
+
+    <fragment
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="0dp"
+        android:layout_marginTop="350dp"
+        app:behavior_skipCollapsed="true"
+        android:id="@+id/locationPanel"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:name="cs461.g2t10.grubpool.FindGrubLocationPanel"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
