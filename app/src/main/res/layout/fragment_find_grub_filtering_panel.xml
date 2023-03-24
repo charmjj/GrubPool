@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFEB3B"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".FindGrubFilteringPanel">
 
@@ -11,12 +11,46 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:padding="2dp"
         android:text="Filtering"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 
-<!--    <LinearLayout-->
-<!--        android:layout_width=""-->
-<!--        android:layout_height=""/>-->
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/filterCuisine"-->
+<!--        android:text="Cuisine"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="@color/black"/>-->
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/filterDiet"-->
+<!--        android:text="Dietary Restrictions"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="@color/black"/>-->
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/filterTime"-->
+<!--        android:text="Time Listed"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="@color/black"/>-->
+
+    <ExpandableListView
+        android:id="@+id/filtersListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layoutDirection="rtl"/>
+    
+
+
+
+
 
 </LinearLayout>

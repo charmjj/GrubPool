@@ -19,11 +19,16 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.gson.Gson
 import java.io.IOException
+import java.io.InputStreamReader
+import java.net.URL
+import javax.net.ssl.HttpsURLConnection
 
 class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -33,9 +38,9 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-
     private var filterPanelBehavior: BottomSheetBehavior<View?>? = null
     private var locationPanelBehavior: BottomSheetBehavior<View?>? = null
+    private var foodDeals: List<FoodDeal> = listOf() // stores ALL deals for now
 
     companion object{
         private const val LOCATION_REQUEST_CODE = 1
@@ -50,7 +55,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        configureFilterPanel()
+        //configureFilterPanel()
         configureLocationPanel()
     }
 
@@ -60,6 +65,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.setOnMarkerClickListener(this)
         setUpMap()
+        fetchFoodDealsData().start()
     }
 
     @SuppressLint("MissingPermission")
@@ -80,32 +86,63 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         }
      }
 
-    private fun placeMarkerOnMap(currentLatLong: LatLng, location: String?) {
+    fun placeMarkerOnMap(currentLatLong: LatLng, location: String?) {
         val markerOptions = MarkerOptions().position(currentLatLong)
         val title = location ?: "Current Location"
         markerOptions.title(title)
         mCurrLocationMarker = mMap.addMarker(markerOptions)
     }
 
-    override fun onMarkerClick(p0: Marker): Boolean = false
+    private fun fetchFoodDealsData(): Thread {
+        return Thread {
+            val url = URL("https://gepzvdvxai.execute-api.ap-southeast-1.amazonaws.com/api/grub-deals")
+            val connection = url.openConnection() as HttpsURLConnection
 
-    private fun configureFilterPanel() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.filterPanel)
+            if (connection.responseCode == 200) {
+                val inputSystem = connection.inputStream
+                val inputStreamReader = InputStreamReader(inputSystem, "UTF-8")
+                foodDeals = Gson().fromJson(inputStreamReader, Array<FoodDeal>::class.java).toMutableList() as ArrayList<FoodDeal>
+                displayFoodDealMarkers(foodDeals as ArrayList<FoodDeal>)
 
-        fragment?.let {
-            BottomSheetBehavior.from(it.requireView())?.let { bsb ->
-                // Set the initial state of the BottomSheetBehavior to HIDDEN
-                bsb.state = BottomSheetBehavior.STATE_HIDDEN
+                inputStreamReader.close()
+                inputSystem.close()
+            }
+        }
 
-                // Set the trigger that will expand your view
-                val filterButton = findViewById<Button>(R.id.filterButton)
-                filterButton.setOnClickListener { bsb.state = BottomSheetBehavior.STATE_EXPANDED }
+    }
 
-                // Set the reference into class attribute (will be used latter)
-                filterPanelBehavior = bsb
+    private fun displayFoodDealMarkers(foodDeals: ArrayList<FoodDeal>) {
+        runOnUiThread {
+            for (foodDeal in foodDeals) {
+                val latLong = LatLng(foodDeal.latitude, foodDeal.longitude)
+                val markerOptions = MarkerOptions().position(latLong).icon(BitmapDescriptorFactory.defaultMarker(
+                    BitmapDescriptorFactory.HUE_YELLOW))
+                val title = foodDeal.location ?: ""
+                markerOptions.title(title)
+                mMap.addMarker(markerOptions)
             }
         }
     }
+
+    override fun onMarkerClick(p0: Marker): Boolean = false
+
+//    private fun configureFilterPanel() {
+//        val fragment = supportFragmentManager.findFragmentById(R.id.filterPanel)
+//
+//        fragment?.let {
+//            BottomSheetBehavior.from(it.requireView())?.let { bsb ->
+//                // Set the initial state of the BottomSheetBehavior to HIDDEN
+//                bsb.state = BottomSheetBehavior.STATE_HIDDEN
+//
+//                // Set the trigger that will expand your view
+//                val filterButton = findViewById<Button>(R.id.filterButton)
+//                filterButton.setOnClickListener { bsb.state = BottomSheetBehavior.STATE_EXPANDED }
+//
+//                // Set the reference into class attribute (will be used latter)
+//                filterPanelBehavior = bsb
+//            }
+//        }
+//    }
 
     private fun configureLocationPanel() {
         val fragment = supportFragmentManager.findFragmentById(R.id.locationPanel)
@@ -127,13 +164,13 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     override fun onBackPressed() {
         // With the reference of the BottomSheetBehavior stored
-        filterPanelBehavior?.let {
-            if (it.state == BottomSheetBehavior.STATE_EXPANDED) {
-                it.state = BottomSheetBehavior.STATE_COLLAPSED
-            } else {
-                onBackPressedDispatcher.onBackPressed()
-            }
-        } ?: onBackPressedDispatcher.onBackPressed()
+//        filterPanelBehavior?.let {
+//            if (it.state == BottomSheetBehavior.STATE_EXPANDED) {
+//                it.state = BottomSheetBehavior.STATE_COLLAPSED
+//            } else {
+//                onBackPressedDispatcher.onBackPressed()
+//            }
+//        } ?: onBackPressedDispatcher.onBackPressed()
 
         locationPanelBehavior?.let {
             if (it.state == BottomSheetBehavior.STATE_EXPANDED) {
@@ -172,6 +209,8 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             try {
                 addressList = geoCoder.getFromLocationName(location, 1)
+                val address = addressList!![0]
+                updateLocationOnMap(location, address)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -180,14 +219,21 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
                 geoCoder.getFromLocationName(location, 1, object: Geocoder.GeocodeListener {
                     override fun onGeocode(addresses: MutableList<Address>) {
                         addressList = addresses
+                        val address = addressList!![0]
+                        updateLocationOnMap(location, address)
                     }
+                    override fun onError(errorMessage: String?) {
+                        print(errorMessage!!)
+                    }
+
                 })
             } catch (e: IllegalArgumentException) { // if locationName is null
                 e.printStackTrace()
             }
         }
+    }
 
-        val address = addressList!![0]
+    fun updateLocationOnMap(location: String, address: Address) {
         val latLng = LatLng(address.latitude, address.longitude)
         locationPanelBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
 
