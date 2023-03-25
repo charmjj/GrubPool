@@ -35,9 +35,10 @@ class ImageCaptureActivity : AppCompatActivity() {
 
         imageView = findViewById(R.id.imageDisplay)
         continueButton = findViewById(R.id.continueButton)
+        captureImageButton = findViewById(R.id.snapButton)
+
         continueButton.isEnabled = false
 
-        captureImageButton = findViewById(R.id.snapButton)
         captureImageButton.setOnClickListener {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             startActivityForResult(cameraIntent, cameraRequest)

@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "cs461.g2t10.grubpool"
-        minSdk 21
+        minSdk 27
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -43,4 +43,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.23.0'
+    implementation 'com.google.android.gms:play-services-location:19.0.0'
 }
