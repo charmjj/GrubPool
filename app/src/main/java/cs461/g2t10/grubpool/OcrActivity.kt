@@ -13,12 +13,9 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -27,7 +24,6 @@ import com.amazonaws.regions.Region
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
-import com.amazonaws.services.s3.model.PutObjectResult
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
@@ -35,14 +31,15 @@ import com.google.android.gms.location.LocationServices
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.File
 import java.io.FileInputStream
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
-import kotlin.collections.ArrayList
 
 class OcrActivity : AppCompatActivity() {
     private var logger = Logger.getLogger("OcrActivity")
@@ -56,8 +53,8 @@ class OcrActivity : AppCompatActivity() {
     private lateinit var itemPrice: EditText
     private lateinit var itemDiscount: EditText
 
-    private var cuisineArr = ArrayList<String>()
-    private var restrictionArr = ArrayList<String>()
+    private var cuisineArr = arrayOf("Japanese", "Chinese", "Italian", "Greek", "Spanish", "Others")
+    private var restrictionArr = arrayOf("Halal", "Vegetarian", "No Restrictions", "No Beef")
     private var selectedCuisine = 1;
     private var selectedRestriction = 1;
 
@@ -71,12 +68,12 @@ class OcrActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         logger.level = Level.ALL
-        setContentView(R.layout.activity_ocr)
-
-        initializeViewComponents()
-        getLocationAccessPermission()
+        setContentView(R.layout.ocr_activity)
         loadCuisinesAndRestrictions()
-        bindListViewItems()
+
+        getLocationAccessPermission()
+        initializeViewComponents()
+        bindSpinnerItems()
 
         val intent = intent
         imageFilePath = intent.getStringExtra("imageFilePath").toString()
@@ -91,7 +88,8 @@ class OcrActivity : AppCompatActivity() {
 
 
     fun onSubmitItem(view: View) {
-        uploadImageToS3()
+        val inputStream = this.openFileInput(imageFilePath)
+        uploadImageToS3(inputStream)
 
         val dealLocation = itemLocation.text.toString().trim()
         val dealVendor = itemShopName.text.toString().trim()
@@ -109,8 +107,8 @@ class OcrActivity : AppCompatActivity() {
             put("description", dealDesc)
             put("price", dealPrice)
             put("discount", dealDiscount)
-            put("latitude", "")
-            put("longitude", "")
+            put("latitude", latitude.toString())
+            put("longitude", longitude.toString())
             put("cuisine_id", selectedCuisine)
             put("restriction_id", selectedRestriction)
             put("image_url", imageFilePath)
@@ -143,7 +141,6 @@ class OcrActivity : AppCompatActivity() {
     private fun initializeViewComponents() {
         dealImage = findViewById(R.id.dealImage)
         itemLocation = findViewById(R.id.itemLocation)
-        itemLocation.setText(currLocation)
         itemShopName = findViewById(R.id.itemShopName)
         itemName = findViewById(R.id.itemName)
         itemDesc = findViewById(R.id.itemDesc)
@@ -168,6 +165,8 @@ class OcrActivity : AppCompatActivity() {
                     if (addresses!!.isNotEmpty()) {
                         val address = addresses[0]
                         currLocation = address.getAddressLine(0)
+                        val itemLocation = findViewById<EditText>(R.id.itemLocation)
+                        itemLocation.text = Editable.Factory.getInstance().newEditable(currLocation)
                     }
                 }
             }
@@ -176,44 +175,57 @@ class OcrActivity : AppCompatActivity() {
         }
     }
 
-    private fun bindListViewItems() {
-        val cuisineListView: ListView = findViewById(R.id.cuisineListView)
+    private fun bindSpinnerItems() {
+        val cuisineSpinner: Spinner = findViewById(R.id.cuisineSpinner)
         val cuisineAdapter =
             ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, cuisineArr)
-        cuisineListView.adapter = cuisineAdapter
-        cuisineListView.choiceMode = ListView.CHOICE_MODE_SINGLE
-        cuisineListView.setItemChecked(0, true)
+        cuisineSpinner.adapter = cuisineAdapter
 
-        cuisineListView.setOnItemClickListener { parent, view, position, id ->
-            selectedCuisine = position + 1
-            cuisineListView.setItemChecked(position, true)
+        cuisineSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                cuisineSpinner.setSelection(position)
+                selectedCuisine = position + 1
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
         }
 
-        val restrictionListView: ListView = findViewById(R.id.restrictionListView)
+        val restrictionSpinner: Spinner = findViewById(R.id.restrictionSpinner)
         val restrictionAdapter = ArrayAdapter<String>(
             this, android.R.layout.simple_list_item_single_choice, restrictionArr
         )
-        restrictionListView.adapter = restrictionAdapter
-        restrictionListView.choiceMode = ListView.CHOICE_MODE_SINGLE
-        restrictionListView.setItemChecked(0, true)
+        restrictionSpinner.adapter = restrictionAdapter
 
-        restrictionListView.setOnItemClickListener { parent, view, position, id ->
-            selectedRestriction = position + 1
-            restrictionListView.setItemChecked(position, true)
+        restrictionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                restrictionSpinner.setSelection(position)
+                selectedRestriction = position + 1
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
         }
     }
 
-    private fun uploadImageToS3() {
-        val credentials =
-            BasicAWSCredentials("", "")
-        val s3Client = AmazonS3Client(credentials, Region.getRegion("ap-southeast-1"))
+    private fun uploadImageToS3(imageFileStream: FileInputStream) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val credentials = BasicAWSCredentials(
+                "", ""
+            )
+            val s3Client = AmazonS3Client(credentials, Region.getRegion("ap-southeast-1"))
 
-        val objectMetadata = ObjectMetadata()
-        val inputStream = this.openFileInput(imageFilePath)
-        val objectRequest =
-            PutObjectRequest("mobile-legend-thumbnails", imageFilePath, inputStream, objectMetadata)
+            val objectMetadata = ObjectMetadata()
+            val objectRequest = PutObjectRequest(
+                "mobile-legend-thumbnails", imageFilePath, imageFileStream, objectMetadata
+            )
 
-        s3Client.putObject(objectRequest)
+            s3Client.putObject(objectRequest)
+        }
     }
 
     private fun loadCuisinesAndRestrictions() {
@@ -224,10 +236,10 @@ class OcrActivity : AppCompatActivity() {
             JsonObjectRequest(Request.Method.GET, cuisineUrl, null, { response ->
                 val cuisines = response.get("data") as JSONArray
 
-                val cuisineString = ArrayList<String>()
+                var cuisineString = arrayOf<String>()
                 for (i in 0 until cuisines.length()) {
                     val item = cuisines.getJSONObject(i)
-                    cuisineString.add(item["cuisine"].toString())
+                    cuisineString += item["cuisine"].toString()
                 }
                 cuisineArr = cuisineString
             }, { error ->
@@ -243,20 +255,22 @@ class OcrActivity : AppCompatActivity() {
             JsonObjectRequest(Request.Method.GET, restrictionUrl, null, { response ->
                 val restrictions = response.get("data") as JSONArray
 
-                val restrictionString = ArrayList<String>()
+                var restrictionString = arrayOf<String>()
                 for (i in 0 until restrictions.length()) {
                     val item = restrictions.getJSONObject(i)
                     item["restriction_id"] as Integer
-                    restrictionString.add(item["restriction"].toString())
+                    restrictionString += item["restriction"].toString()
                 }
                 restrictionArr = restrictionString
-            }, { err ->
+            }, { error ->
                 Toast.makeText(
                     this,
                     "Some error occurred! Cannot fetch all dietary restrictions",
                     Toast.LENGTH_SHORT
                 ).show()
-                Log.e("OCRActivity", "Error loading dietary restrictions: ${err.localizedMessage}")
+                Log.e(
+                    "OCRActivity", "Error loading dietary restrictions: ${error.localizedMessage}"
+                )
             })
 
         volleyQueue.add(cuisineObjectResponse)
