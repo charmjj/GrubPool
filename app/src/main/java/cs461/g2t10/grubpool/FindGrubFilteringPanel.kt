@@ -19,8 +19,8 @@ class FindGrubFilteringPanel : Fragment() {
     private var filterTypesList: List<String> = listOf("Cuisine", "Dietary Restrictions", "Time Listed")
     private var filtersList: HashMap<String, List<String>> = hashMapOf()
 
-    val defaultFilters: LinkedHashMap<String, String> =  linkedMapOf("Cuisine" to "All Cuisines", "Dietary Restrictions" to "No Restrictions", "Time Listed" to "All Time");
-    var selectedFilters: LinkedHashMap<String, String> =  linkedMapOf("Cuisine" to "All Cuisines", "Dietary Restrictions" to "No Restrictions", "Time Listed" to "All Time");
+//    val defaultFilters: LinkedHashMap<String, String> =  linkedMapOf("Cuisine" to "All Cuisines", "Dietary Restrictions" to "No Restrictions", "Time Listed" to "All Time");
+//    var selectedFilters: LinkedHashMap<String, String> =  linkedMapOf("Cuisine" to "All Cuisines", "Dietary Restrictions" to "No Restrictions", "Time Listed" to "All Time");
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

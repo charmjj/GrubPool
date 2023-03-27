@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/filterTypeTv"
         android:textSize="18sp"
+        android:textColor="@color/black"
         android:text="Filter Type Textview"/>
 
 </LinearLayout>

@@ -13,4 +13,6 @@ data class FoodDeal(@SerializedName("deal_id") val dealId: String, @SerializedNa
     var date: Date? = null
     var latitude: Double = 0.0
     var longitude: Double = 0.0
+    @SerializedName("image_url")
+    var imageUrl: String? = null
 }

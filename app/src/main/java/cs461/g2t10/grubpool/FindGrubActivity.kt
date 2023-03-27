@@ -3,12 +3,15 @@ package cs461.g2t10.grubpool
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -31,6 +34,8 @@ import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
 class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+
+    private val imageBaseUrl: String = "https://mobile-legend-thumbnails.s3.ap-southeast-1.amazonaws.com/"
 
     private lateinit var mMap: GoogleMap
     internal lateinit var lastLocation: Location // user's actual live location
@@ -55,7 +60,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        //configureFilterPanel()
+        configureFilterPanel()
         configureLocationPanel()
     }
 
@@ -112,11 +117,28 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
     }
 
     private fun displayFoodDealMarkers(foodDeals: ArrayList<FoodDeal>) {
-        runOnUiThread {
-            for (foodDeal in foodDeals) {
-                val latLong = LatLng(foodDeal.latitude, foodDeal.longitude)
-                val markerOptions = MarkerOptions().position(latLong).icon(BitmapDescriptorFactory.defaultMarker(
-                    BitmapDescriptorFactory.HUE_YELLOW))
+        for (foodDeal in foodDeals) {
+            val latLong = LatLng(foodDeal.latitude, foodDeal.longitude)
+            Log.d("TAGGG", foodDeal.location.toString())
+            var markerOptions: MarkerOptions? = null
+            if (foodDeal.imageUrl != null) {
+                Log.d("IMAGE URL ISSS:", foodDeal.imageUrl!!)
+                val url = URL(imageBaseUrl + foodDeal.imageUrl)
+                val image = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+                val bmp = Bitmap.createScaledBitmap(image, 85, 85, false)
+                markerOptions =
+                    MarkerOptions()
+                        .position(latLong)
+                        .icon(BitmapDescriptorFactory.fromBitmap(bmp))
+            } else {
+                val image = BitmapFactory.decodeResource(resources, R.drawable.dish)
+                val bmp = Bitmap.createScaledBitmap(image, 85, 85, false)
+                markerOptions =
+                    MarkerOptions()
+                        .position(latLong)
+                        .icon(BitmapDescriptorFactory.fromBitmap(bmp))
+            }
+            runOnUiThread {
                 val title = foodDeal.location ?: ""
                 markerOptions.title(title)
                 mMap.addMarker(markerOptions)
@@ -126,23 +148,23 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     override fun onMarkerClick(p0: Marker): Boolean = false
 
-//    private fun configureFilterPanel() {
-//        val fragment = supportFragmentManager.findFragmentById(R.id.filterPanel)
-//
-//        fragment?.let {
-//            BottomSheetBehavior.from(it.requireView())?.let { bsb ->
-//                // Set the initial state of the BottomSheetBehavior to HIDDEN
-//                bsb.state = BottomSheetBehavior.STATE_HIDDEN
-//
-//                // Set the trigger that will expand your view
-//                val filterButton = findViewById<Button>(R.id.filterButton)
-//                filterButton.setOnClickListener { bsb.state = BottomSheetBehavior.STATE_EXPANDED }
-//
-//                // Set the reference into class attribute (will be used latter)
-//                filterPanelBehavior = bsb
-//            }
-//        }
-//    }
+    private fun configureFilterPanel() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.filterPanel)
+
+        fragment?.let {
+            BottomSheetBehavior.from(it.requireView())?.let { bsb ->
+                // Set the initial state of the BottomSheetBehavior to HIDDEN
+                bsb.state = BottomSheetBehavior.STATE_HIDDEN
+                bsb.isFitToContents = false
+                // Set the trigger that will expand your view
+                val filterButton = findViewById<Button>(R.id.filterButton)
+                filterButton.setOnClickListener { bsb.state = BottomSheetBehavior.STATE_EXPANDED }
+
+                // Set the reference into class attribute (will be used later)
+                filterPanelBehavior = bsb
+            }
+        }
+    }
 
     private fun configureLocationPanel() {
         val fragment = supportFragmentManager.findFragmentById(R.id.locationPanel)
@@ -164,13 +186,13 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     override fun onBackPressed() {
         // With the reference of the BottomSheetBehavior stored
-//        filterPanelBehavior?.let {
-//            if (it.state == BottomSheetBehavior.STATE_EXPANDED) {
-//                it.state = BottomSheetBehavior.STATE_COLLAPSED
-//            } else {
-//                onBackPressedDispatcher.onBackPressed()
-//            }
-//        } ?: onBackPressedDispatcher.onBackPressed()
+        filterPanelBehavior?.let {
+            if (it.state == BottomSheetBehavior.STATE_EXPANDED) {
+                it.state = BottomSheetBehavior.STATE_COLLAPSED
+            } else {
+                onBackPressedDispatcher.onBackPressed()
+            }
+        } ?: onBackPressedDispatcher.onBackPressed()
 
         locationPanelBehavior?.let {
             if (it.state == BottomSheetBehavior.STATE_EXPANDED) {

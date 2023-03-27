@@ -47,21 +47,20 @@
             android:paddingTop="7dp" />
     </LinearLayout>
 
-<!--    <fragment-->
-<!--        app:behavior_hideable="true"-->
-<!--        app:behavior_peekHeight="0dp"-->
-<!--        android:layout_marginTop="350dp"-->
-<!--        app:behavior_skipCollapsed="true"-->
-<!--        android:id="@+id/filterPanel"-->
-<!--        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:name="cs461.g2t10.grubpool.FindGrubFilteringPanel"-->
-<!--        />-->
+    <fragment
+        app:behavior_hideable="true"
+        android:layout_marginTop="350dp"
+        app:behavior_skipCollapsed="true"
+        android:id="@+id/filterPanel"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:name="cs461.g2t10.grubpool.FindGrubFilteringPanel"
+        />
 
     <fragment
         app:behavior_hideable="true"
-        app:behavior_peekHeight="0dp"
         android:layout_marginTop="350dp"
         app:behavior_skipCollapsed="true"
         android:id="@+id/locationPanel"
