@@ -11,7 +11,6 @@ import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -35,7 +34,7 @@ import javax.net.ssl.HttpsURLConnection
 
 class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    private val imageBaseUrl: String = "https://mobile-legend-thumbnails.s3.ap-southeast-1.amazonaws.com/"
+    private val imageBaseUrl: String = Urls.S3_BASE_URL
 
     private lateinit var mMap: GoogleMap
     internal lateinit var lastLocation: Location // user's actual live location
@@ -100,7 +99,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     private fun fetchFoodDealsData(): Thread {
         return Thread {
-            val url = URL("https://gepzvdvxai.execute-api.ap-southeast-1.amazonaws.com/api/grub-deals")
+            val url = URL(Urls.BASE_API_ENDPOINT + "/grub-deals")
             val connection = url.openConnection() as HttpsURLConnection
 
             if (connection.responseCode == 200) {
@@ -119,10 +118,8 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
     private fun displayFoodDealMarkers(foodDeals: ArrayList<FoodDeal>) {
         for (foodDeal in foodDeals) {
             val latLong = LatLng(foodDeal.latitude, foodDeal.longitude)
-            Log.d("TAGGG", foodDeal.location.toString())
             var markerOptions: MarkerOptions? = null
             if (foodDeal.imageUrl != null) {
-                Log.d("IMAGE URL ISSS:", foodDeal.imageUrl!!)
                 val url = URL(imageBaseUrl + foodDeal.imageUrl)
                 val image = BitmapFactory.decodeStream(url.openConnection().getInputStream())
                 val bmp = Bitmap.createScaledBitmap(image, 85, 85, false)
