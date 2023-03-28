@@ -86,7 +86,6 @@ class OcrActivity : AppCompatActivity() {
         extractTextFromImage(imageBitmap)
     }
 
-
     fun onSubmitItem(view: View) {
         val inputStream = this.openFileInput(imageFilePath)
         uploadImageToS3(inputStream)
@@ -132,6 +131,17 @@ class OcrActivity : AppCompatActivity() {
         val image = InputImage.fromBitmap(bitmap, 0)
         recognizer.process(image).addOnSuccessListener { visionText ->
             val resultText = visionText.text
+            val priceIndex = resultText.indexOf("$")
+            val discountIndex = resultText.indexOf("%")
+
+            if (priceIndex != -1) {
+                val priceStr = resultText.substring(priceIndex + 1, priceIndex + 5)
+                itemPrice.text = Editable.Factory.getInstance().newEditable(priceStr)
+            }
+            if (discountIndex != -1) {
+                val discountStr = resultText.substring(discountIndex - 3, discountIndex)
+                itemDiscount.text = Editable.Factory.getInstance().newEditable(discountStr)
+            }
             logger.info("This is the text generated from the image: $resultText")
         }.addOnFailureListener { e ->
             logger.log(Level.SEVERE, "An error occurred while processing the image", e)
