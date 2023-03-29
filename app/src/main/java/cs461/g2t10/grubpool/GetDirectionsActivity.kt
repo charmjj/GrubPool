@@ -35,9 +35,14 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var origin: String
     private lateinit var destination: String
     private lateinit var apiKey: String
+    private lateinit var latitude: String
+    private lateinit var longitude: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val it = intent
+        latitude = it.getStringExtra("latitude").toString()
+        longitude = it.getStringExtra("longitude").toString()
 
         binding = ActivityGetDirectionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -74,6 +79,8 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         origin = "1.2977418685717947,103.84950412818968"
         destination = "1.300462672655118,103.8400988398267"
+        // destination = latitude + "," + longitude
+        apiKey = "AIzaSyCJUfpuEzgmkUnxmB9A3zFl5G4YtPMWmNk"
 
         val urlString = "https://maps.googleapis.com/maps/api/directions/json?" +
                 "origin=$origin" +
