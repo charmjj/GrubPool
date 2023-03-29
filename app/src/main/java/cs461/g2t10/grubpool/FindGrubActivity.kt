@@ -42,7 +42,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private var filterPanelBehavior: BottomSheetBehavior<View?>? = null
+    public var filterPanelBehavior: BottomSheetBehavior<View?>? = null
     private var locationPanelBehavior: BottomSheetBehavior<View?>? = null
     private var foodDeals: List<FoodDeal> = listOf() // stores ALL deals for now
 
@@ -175,7 +175,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
                 val filterButton = findViewById<Button>(R.id.setLocationButton)
                 filterButton.setOnClickListener { bsb.state = BottomSheetBehavior.STATE_EXPANDED }
 
-                // Set the reference into class attribute (will be used latter)
+                // Set the reference into class attribute (will be used later)
                 locationPanelBehavior = bsb
             }
         }
@@ -185,7 +185,8 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         // With the reference of the BottomSheetBehavior stored
         filterPanelBehavior?.let {
             if (it.state == BottomSheetBehavior.STATE_EXPANDED) {
-                it.state = BottomSheetBehavior.STATE_COLLAPSED
+                it.state = BottomSheetBehavior.STATE_HIDDEN
+                return
             } else {
                 onBackPressedDispatcher.onBackPressed()
             }
@@ -193,7 +194,8 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
         locationPanelBehavior?.let {
             if (it.state == BottomSheetBehavior.STATE_EXPANDED) {
-                it.state = BottomSheetBehavior.STATE_COLLAPSED
+                it.state = BottomSheetBehavior.STATE_HIDDEN
+                return
             } else {
                 onBackPressedDispatcher.onBackPressed()
             }
