@@ -11,6 +11,7 @@ import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -138,12 +139,20 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
             runOnUiThread {
                 val title = foodDeal.location ?: ""
                 markerOptions.title(title)
-                mMap.addMarker(markerOptions)
+                val marker = mMap.addMarker(markerOptions)
+                marker?.tag = foodDeal.dealId
             }
         }
     }
 
-    override fun onMarkerClick(p0: Marker): Boolean = false
+    override fun onMarkerClick(marker: Marker): Boolean {
+        val dealId = marker.tag.toString()
+        if (dealId == null) {
+            return false
+        }
+        Log.d("MARKER CLICKEDDD", dealId)
+        return true
+    }
 
     private fun configureFilterPanel() {
         val fragment = supportFragmentManager.findFragmentById(R.id.filterPanel)
