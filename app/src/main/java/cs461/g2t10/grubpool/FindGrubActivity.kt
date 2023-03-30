@@ -94,7 +94,9 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         val markerOptions = MarkerOptions().position(currentLatLong)
         val title = location ?: "Current Location"
         markerOptions.title(title)
-        mCurrLocationMarker = mMap.addMarker(markerOptions)
+        runOnUiThread {
+            mCurrLocationMarker = mMap.addMarker(markerOptions)
+        }
     }
 
     private fun fetchFoodDealsData(): Thread {
@@ -256,12 +258,16 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     fun updateLocationOnMap(location: String, address: Address) {
         val latLng = LatLng(address.latitude, address.longitude)
-        locationPanelBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        locationPanelBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
 
         if (mCurrLocationMarker != null) {
-            mCurrLocationMarker!!.remove()
+            runOnUiThread {
+                mCurrLocationMarker!!.remove()
+            }
         }
         placeMarkerOnMap(latLng, location)
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+        runOnUiThread {
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+        }
     }
 }
