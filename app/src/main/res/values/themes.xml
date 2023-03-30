@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.GrubPool" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.GrubPool" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/appAmber</item>
         <item name="colorPrimaryVariant">@color/appYellow</item>

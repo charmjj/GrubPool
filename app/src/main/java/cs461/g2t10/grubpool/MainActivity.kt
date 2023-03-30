@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,5 +14,10 @@ class MainActivity : AppCompatActivity() {
     fun shareGrub(view: View) {
         val shareGroupIntent = Intent(this, ImageCaptureActivity::class.java)
         startActivity(shareGroupIntent)
+    }
+
+    fun findGrub(view: View) {
+        val intent = Intent(this, FindGrubActivity::class.java)
+        startActivity(intent)
     }
 }

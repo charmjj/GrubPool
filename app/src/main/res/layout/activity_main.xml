@@ -43,6 +43,7 @@
         android:background="@drawable/rounded_corner"
         android:text="Find Grub"
         android:textColor="@color/black"
+        android:onClick="findGrub"
         app:backgroundTint="@color/appYellow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.627"

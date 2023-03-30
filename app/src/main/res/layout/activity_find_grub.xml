@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    tools:context=".FindGrubActivity">
+
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/setLocationButton"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/circle_button"
+            android:drawableTop="@drawable/ic_outline_pin_drop"
+            android:paddingTop="7dp" />
+
+        <Button
+            android:id="@+id/filterButton"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_button"
+            android:drawableTop="@drawable/ic_outline_filter"
+            android:paddingTop="7dp" />
+    </LinearLayout>
+
+    <fragment
+        app:behavior_hideable="true"
+        android:layout_marginTop="350dp"
+        app:behavior_skipCollapsed="true"
+        android:id="@+id/filterPanel"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:name="cs461.g2t10.grubpool.FindGrubFilteringPanel"
+        />
+
+    <fragment
+        app:behavior_hideable="true"
+        android:layout_marginTop="350dp"
+        app:behavior_skipCollapsed="true"
+        android:id="@+id/locationPanel"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:name="cs461.g2t10.grubpool.FindGrubLocationPanel"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
