@@ -11,6 +11,7 @@ import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -30,7 +31,11 @@ import com.google.gson.Gson
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
+import java.time.Instant
+import java.util.*
 import javax.net.ssl.HttpsURLConnection
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -45,6 +50,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
     public var filterPanelBehavior: BottomSheetBehavior<View?>? = null
     private var locationPanelBehavior: BottomSheetBehavior<View?>? = null
     private var foodDeals: List<FoodDeal> = listOf() // stores ALL deals for now
+    private var filteredDeals: List<FoodDeal> = listOf()
 
     companion object{
         private const val LOCATION_REQUEST_CODE = 1
@@ -108,7 +114,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
                 val inputSystem = connection.inputStream
                 val inputStreamReader = InputStreamReader(inputSystem, "UTF-8")
                 foodDeals = Gson().fromJson(inputStreamReader, Array<FoodDeal>::class.java).toMutableList() as ArrayList<FoodDeal>
-                displayFoodDealMarkers(foodDeals as ArrayList<FoodDeal>)
+                displayFoodDealMarkers(foodDeals)
 
                 inputStreamReader.close()
                 inputSystem.close()
@@ -117,7 +123,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     }
 
-    private fun displayFoodDealMarkers(foodDeals: ArrayList<FoodDeal>) {
+    private fun displayFoodDealMarkers(foodDeals: List<FoodDeal>) {
         for (foodDeal in foodDeals) {
             val latLong = LatLng(foodDeal.latitude, foodDeal.longitude)
             var markerOptions: MarkerOptions? = null
@@ -270,4 +276,26 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
             mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
         }
     }
+
+    fun filterDeals(currentSelections: HashMap<String, MutableList<String>>): Thread { // {Cuisine=[All Cuisines], Time Listed=[All Time], Dietary Restrictions=[No Restrictions]}
+        mMap.clear()
+        return Thread {
+            val cuisines = currentSelections["Cuisine"] as List<String>
+            val restrictions = currentSelections["Dietary Restrictions"] as List<String>
+            val timeListed = currentSelections["Time Listed"]?.get(0)
+            filteredDeals = foodDeals.filter {
+                val cuisinesPass = if (cuisines.contains("All Cuisines")) true else cuisines.contains(it.cuisine)
+                val restrictionsPass = if (restrictions.contains("No Restrictions")) true else restrictions.contains(it.restriction)
+                cuisinesPass && restrictionsPass && compareTime(it.date)
+            }
+            displayFoodDealMarkers(filteredDeals)
+        }
+    }
+
+    private fun compareTime(date: Date?): Boolean {
+        Log.d("DATEEEE", date.toString()) // Sat Mar 25 12:04:14 GMT 2023
+        val currentDate = Date()
+        return true
+    }
+
 }

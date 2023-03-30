@@ -12,7 +12,8 @@ import android.widget.TextView
 class ExpandableFiltersListViewAdapter internal constructor(private val context: Context,
                                                             private val filterTypesList: List<String>,
                                                             private val filtersList: HashMap<String, List<String>>,
-                                                            private val currentSelections: HashMap<String, List<String>>): BaseExpandableListAdapter() {
+                                                            private var currentSelections: HashMap<String, MutableList<String>>
+): BaseExpandableListAdapter() {
 
     private var expandableListView: ExpandableListView? = null
     private var lastExpandedPosition = -1
@@ -103,4 +104,7 @@ class ExpandableFiltersListViewAdapter internal constructor(private val context:
         lastExpandedPosition = groupPosition
     }
 
+    fun updateSelections(selections: HashMap<String, MutableList<String>>) {
+        currentSelections = selections
+    }
 }
