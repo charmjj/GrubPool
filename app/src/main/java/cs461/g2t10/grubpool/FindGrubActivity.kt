@@ -286,15 +286,27 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
             filteredDeals = foodDeals.filter {
                 val cuisinesPass = if (cuisines.contains("All Cuisines")) true else cuisines.contains(it.cuisine)
                 val restrictionsPass = if (restrictions.contains("No Restrictions")) true else restrictions.contains(it.restriction)
-                cuisinesPass && restrictionsPass && compareTime(it.date)
+                cuisinesPass && restrictionsPass && compareTime(timeListed, it.date)
             }
             displayFoodDealMarkers(filteredDeals)
         }
     }
 
-    private fun compareTime(date: Date?): Boolean {
-        Log.d("DATEEEE", date.toString()) // Sat Mar 25 12:04:14 GMT 2023
+    private fun compareTime(selection: String?, date: Date?): Boolean { // selection = "Last Hour", "Last 3 Hours", "Last 5 Hours", "All Time"
+        if (selection == "All Time") {
+            return true
+        }
+        Log.d("DATEEEE", date.toString())
+        val timeIntervals = hashMapOf(
+            "Last Hour" to 1,
+            "Last 3 Hours" to 3,
+            "Last 5 Hours" to 5
+        )
         val currentDate = Date()
+        val hoursElapsed = (currentDate.time - date!!.time) / 3600000
+        if (hoursElapsed > timeIntervals[selection]!!) {
+            return false
+        }
         return true
     }
 
