@@ -224,6 +224,7 @@ class OcrActivity : AppCompatActivity() {
 
     private fun uploadImageToS3(imageFileStream: FileInputStream) {
         CoroutineScope(Dispatchers.IO).launch {
+            // TODO: Populate the aws credentials here
             val credentials = BasicAWSCredentials(
                 "", ""
             )
