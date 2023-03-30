@@ -1,4 +1,4 @@
-package cs461.g2t10.grubpool
+package cs461.g2t10.grubpool.models
 
 object Urls {
     // TODO: insert urls here

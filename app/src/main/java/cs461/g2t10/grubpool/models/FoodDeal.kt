@@ -1,4 +1,4 @@
-package cs461.g2t10.grubpool
+package cs461.g2t10.grubpool.models
 
 import com.google.gson.annotations.SerializedName
 import java.util.Date

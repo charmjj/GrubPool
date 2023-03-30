@@ -31,6 +31,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import cs461.g2t10.grubpool.models.AWSCreds
+import cs461.g2t10.grubpool.models.Urls
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -97,7 +99,7 @@ class OcrActivity : AppCompatActivity() {
         val dealPrice = itemPrice.text.toString().trim().toFloat()
         val dealDiscount = itemDiscount.text.toString().trim().toFloat()
 
-        val url = "https://gepzvdvxai.execute-api.ap-southeast-1.amazonaws.com/api/grub-deal/add"
+        val url = "${Urls.BASE_API_ENDPOINT}/grub-deal/add"
         val requestBody = JSONObject().apply {
             put("user_id", "")
             put("location", dealLocation)
@@ -224,11 +226,10 @@ class OcrActivity : AppCompatActivity() {
 
     private fun uploadImageToS3(imageFileStream: FileInputStream) {
         CoroutineScope(Dispatchers.IO).launch {
-            // TODO: Populate the aws credentials here
             val credentials = BasicAWSCredentials(
-                "", ""
+                AWSCreds.ACCESS_KEY, AWSCreds.SECRET_KEY
             )
-            val s3Client = AmazonS3Client(credentials, Region.getRegion("ap-southeast-1"))
+            val s3Client = AmazonS3Client(credentials, Region.getRegion(AWSCreds.REGION))
 
             val objectMetadata = ObjectMetadata()
             val objectRequest = PutObjectRequest(
@@ -241,7 +242,7 @@ class OcrActivity : AppCompatActivity() {
 
     private fun loadCuisinesAndRestrictions() {
         val volleyQueue = Volley.newRequestQueue(this)
-        val cuisineUrl = "https://gepzvdvxai.execute-api.ap-southeast-1.amazonaws.com/api/cuisines"
+        val cuisineUrl = "${Urls.BASE_API_ENDPOINT}/cuisines"
 
         val cuisineObjectResponse =
             JsonObjectRequest(Request.Method.GET, cuisineUrl, null, { response ->
@@ -260,8 +261,7 @@ class OcrActivity : AppCompatActivity() {
                 Log.e("OCRActivity", "Error loading cuisine: ${error.localizedMessage}")
             })
 
-        val restrictionUrl =
-            "https://gepzvdvxai.execute-api.ap-southeast-1.amazonaws.com/api/restrictions"
+        val restrictionUrl = "${Urls.BASE_API_ENDPOINT}/restrictions"
         val restrictionObjectResponse =
             JsonObjectRequest(Request.Method.GET, restrictionUrl, null, { response ->
                 val restrictions = response.get("data") as JSONArray
