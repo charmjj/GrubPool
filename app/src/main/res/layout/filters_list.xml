@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:gravity="center"
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/filtersTv"
-        android:textSize="16sp"
-        android:text = "Filters TextView"/>
+        android:layoutDirection="ltr"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:id="@+id/filtersTv"
+            android:textSize="16sp"
+            android:padding="3dp"
+            android:text="Filters TextView"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkMark"
+            android:src="@drawable/checkmark"
+            android:layout_gravity="end"/>
+    </LinearLayout>
+
 
 </LinearLayout>
