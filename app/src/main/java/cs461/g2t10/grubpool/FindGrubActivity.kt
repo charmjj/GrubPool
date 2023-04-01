@@ -31,10 +31,8 @@ import com.google.gson.Gson
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
-import java.time.Instant
 import java.util.*
 import javax.net.ssl.HttpsURLConnection
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -48,7 +46,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     public var filterPanelBehavior: BottomSheetBehavior<View?>? = null
-    private var locationPanelBehavior: BottomSheetBehavior<View?>? = null
+    public var locationPanelBehavior: BottomSheetBehavior<View?>? = null
     private var foodDeals: List<FoodDeal> = listOf() // stores ALL deals
     private var nearbyFoodDeals: MutableList<FoodDeal> = mutableListOf()
     private var filteredDeals: List<FoodDeal> = listOf()
@@ -90,10 +88,14 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             if (location != null) {
                 lastLocation = location
-                val currentLatLong = LatLng(location.latitude, location.longitude)
-                placeMarkerOnMap(currentLatLong, null)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 12f))
-            } // TODO: else set arbitrary location
+            } else { // default location = SMU SCIS
+                lastLocation = Location("gps")
+                lastLocation.latitude = 1.297795498999938
+                lastLocation.longitude = 103.84948266943248
+            }
+            val currentLatLong = LatLng(lastLocation.latitude, lastLocation.longitude)
+            placeMarkerOnMap(currentLatLong, null)
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 14f))
         }
      }
 
@@ -196,8 +198,8 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
                 bsb.state = BottomSheetBehavior.STATE_HIDDEN
 
                 // Set the trigger that will expand your view
-                val filterButton = findViewById<Button>(R.id.setLocationButton)
-                filterButton.setOnClickListener { bsb.state = BottomSheetBehavior.STATE_EXPANDED }
+                val locationButton = findViewById<Button>(R.id.setLocationButton)
+                locationButton.setOnClickListener { bsb.state = BottomSheetBehavior.STATE_EXPANDED }
 
                 // Set the reference into class attribute (will be used later)
                 locationPanelBehavior = bsb
@@ -208,7 +210,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
     override fun onBackPressed() {
         // With the reference of the BottomSheetBehavior stored
         filterPanelBehavior?.let {
-            if (it.state == BottomSheetBehavior.STATE_EXPANDED) {
+            if (it.state == BottomSheetBehavior.STATE_EXPANDED || it.state == BottomSheetBehavior.STATE_HALF_EXPANDED ) {
                 it.state = BottomSheetBehavior.STATE_HIDDEN
                 return
             } else {
@@ -217,7 +219,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         } ?: onBackPressedDispatcher.onBackPressed()
 
         locationPanelBehavior?.let {
-            if (it.state == BottomSheetBehavior.STATE_EXPANDED) {
+            if (it.state == BottomSheetBehavior.STATE_EXPANDED || it.state == BottomSheetBehavior.STATE_HALF_EXPANDED) {
                 it.state = BottomSheetBehavior.STATE_HIDDEN
                 return
             } else {
@@ -225,23 +227,6 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
             }
         } ?: onBackPressedDispatcher.onBackPressed()
     }
-
-//    override fun onLocationChanged(location: Location) {
-//        lastLocation = location
-//        if (mCurrLocationMarker != null) {
-//            mCurrLocationMarker!!.remove()
-//        }
-//        val latLng = LatLng(location.latitude, location.longitude)
-//        val markerOptions = MarkerOptions()
-//        markerOptions.position(latLng)
-//        markerOptions.title("Current Position")
-//
-//        mCurrLocationMarker = mMap!!.addMarker(markerOptions)
-//        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-//        mMap!!.moveCamera(CameraUpdateFactory.zoomTo(11f))
-//
-////        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-//    }
 
     fun searchLocation(location: String) {
         if (location == null || location == "") {
@@ -290,7 +275,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         runOnUiThread {
             mMap.clear()
             placeMarkerOnMap(latLng, location)
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f))
         }
         return Thread {
             nearbyFoodDeals.clear()
@@ -299,7 +284,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
                     nearbyFoodDeals.add(foodDeal)
                 }
             }
-            displayFoodDealMarkers(nearbyFoodDeals) // can be called from within a Thread
+            displayFoodDealMarkers(nearbyFoodDeals)
         }
     }
 

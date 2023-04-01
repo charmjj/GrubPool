@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
 class FindGrubLocationPanel : Fragment() {
@@ -30,6 +31,12 @@ class FindGrubLocationPanel : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_find_grub_location_panel, container, false)
         searchField = view.findViewById(R.id.et_search)
+        val locationPanelBehavior = (activity as FindGrubActivity).locationPanelBehavior
+        searchField.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                locationPanelBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
         val button = view.findViewById(R.id.searchBtn) as Button
         button.setOnClickListener {
             searchLocation()
