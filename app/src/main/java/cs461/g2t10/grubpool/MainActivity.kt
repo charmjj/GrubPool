@@ -11,6 +11,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
+    fun shareGrub(view: View) {
+        val shareGroupIntent = Intent(this, ImageCaptureActivity::class.java)
+        startActivity(shareGroupIntent)
+    }
+
     fun findGrub(view: View) {
         val intent = Intent(this, FindGrubActivity::class.java)
         startActivity(intent)

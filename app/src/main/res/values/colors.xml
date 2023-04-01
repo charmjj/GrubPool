@@ -10,4 +10,5 @@
     <color name="appGreen">#55EE92</color>
     <color name="appAmber">#FFAE34</color>
     <color name="appYellow">#FFE870</color>
+    <color name="grey">#696969</color>
 </resources>

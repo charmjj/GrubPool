@@ -28,6 +28,7 @@
         android:background="@drawable/rounded_corner"
         android:text="Share Grub"
         android:textColor="@color/black"
+        android:onClick="shareGrub"
         app:backgroundTint="@color/appGreen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.179"
