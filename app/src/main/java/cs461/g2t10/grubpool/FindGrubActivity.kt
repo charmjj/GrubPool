@@ -2,6 +2,7 @@ package cs461.g2t10.grubpool
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -151,6 +152,9 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
             return false
         }
         Log.d("MARKER CLICKEDDD", dealId)
+        val myIntent = Intent(this, ViewDealActivity::class.java)
+        myIntent.putExtra("dealId", dealId)
+        startActivity(myIntent)
         return true
     }
 

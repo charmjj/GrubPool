@@ -1,11 +1,22 @@
 package cs461.g2t10.grubpool
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -35,14 +46,16 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var origin: String
     private lateinit var destination: String
     private lateinit var apiKey: String
-    private lateinit var latitude: String
-    private lateinit var longitude: String
+    private lateinit var oriLat: String
+    private lateinit var oriLong: String
+    private lateinit var desLat: String
+    private lateinit var desLong: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val it = intent
-        latitude = it.getStringExtra("latitude").toString()
-        longitude = it.getStringExtra("longitude").toString()
+        desLat = it.getStringExtra("latitude").toString()
+        desLong = it.getStringExtra("longitude").toString()
 
         binding = ActivityGetDirectionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -69,18 +82,33 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      */
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Move the camera to current location
-        val currentLocation = LatLng(1.2977418685717947, 103.84950412818968)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
-        mMap.setMinZoomPreference(15f)
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Obtain current location's coordinates
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    oriLat = location.latitude.toString()
+                    oriLong = location.longitude.toString()
+                    println(oriLat)
+                    println(oriLong)
+                    getDirections(mMap)
+                }
+            }
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+        }
+    }
 
-        origin = "1.2977418685717947,103.84950412818968"
-        destination = "1.300462672655118,103.8400988398267"
-        // destination = latitude + "," + longitude
+    private fun getDirections(googleMap: GoogleMap) {
+        origin = "$oriLat,$oriLong"
+        destination = "$desLat,$desLong"
         apiKey = "AIzaSyCJUfpuEzgmkUnxmB9A3zFl5G4YtPMWmNk"
+        println(origin)
+        println(destination)
 
         val urlString = "https://maps.googleapis.com/maps/api/directions/json?" +
                 "origin=$origin" +
@@ -130,7 +158,7 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val endLatLng = LatLng(endLocation.getDouble("lat"), endLocation.getDouble("lng"))
                 mMap.addMarker(MarkerOptions().position(startLatLng).title("Your Location"))
                 // TODO: Replace marker title with shop name
-                mMap.addMarker(MarkerOptions().position(endLatLng).title("Don Don Donki Orchard Central"))
+                mMap.addMarker(MarkerOptions().position(endLatLng).title("Your Destination"))
 
                 // Set the camera position to center on the route
                 val boundsBuilder = LatLngBounds.builder()
@@ -177,8 +205,6 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun openMaps(view: View) {
-        origin = "SMU School of Computing and Information Systems 1"
-        destination = "DON DON DONKI Orchard Central"
         val uri = "http://maps.google.com/maps?saddr=$origin&daddr=$destination"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         intent.setPackage("com.google.android.apps.maps")

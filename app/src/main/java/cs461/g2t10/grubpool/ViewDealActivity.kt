@@ -29,11 +29,10 @@ class ViewDealActivity : AppCompatActivity() {
         val it = intent
 
         // Receives an Intent with item ID
-        val dealId = "e610816a-f1bc-4121-9404-9a5d2eb1bbdb"
-        // val dealId = it.getStringExtra("deal_id")
+        val dealId = it.getStringExtra("dealId")
 
         // Query DB for item information by item ID and insert into View
-        fetchFoodDealsData(dealId)
+        fetchFoodDealsData(dealId!!)
 
     }
 
@@ -45,9 +44,9 @@ class ViewDealActivity : AppCompatActivity() {
         startActivity(myIntent)
     }
 
-    private fun fetchFoodDealsData(deal_id: String) {
+    private fun fetchFoodDealsData(dealId: String) {
         Thread {
-            val url = URL(Urls.BASE_API_ENDPOINT + "/grub-deal/" + deal_id)
+            val url = URL(Urls.BASE_API_ENDPOINT + "/grub-deal/" + dealId)
             val connection = url.openConnection() as HttpsURLConnection
 
             if (connection.responseCode == 200) {
