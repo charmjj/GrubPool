@@ -10,6 +10,7 @@
         android:id="@+id/filterTypeTv"
         android:textSize="18sp"
         android:textColor="@color/black"
+        android:padding="5dp"
         android:text="Filter Type Textview"/>
 
 </LinearLayout>

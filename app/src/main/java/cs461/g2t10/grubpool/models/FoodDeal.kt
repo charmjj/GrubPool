@@ -1,4 +1,4 @@
-package cs461.g2t10.grubpool
+package cs461.g2t10.grubpool.models
 
 import com.google.gson.annotations.SerializedName
 import java.util.Date
@@ -13,6 +13,8 @@ data class FoodDeal(@SerializedName("deal_id") val dealId: String, @SerializedNa
     var date: Date? = null
     var latitude: Double = 0.0
     var longitude: Double = 0.0
+    var cuisine: String? = null
+    var restriction: String? = null
     @SerializedName("image_url")
     var imageUrl: String? = null
 }
