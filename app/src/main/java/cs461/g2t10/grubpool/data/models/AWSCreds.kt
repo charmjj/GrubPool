@@ -1,4 +1,4 @@
-package cs461.g2t10.grubpool.models
+package cs461.g2t10.grubpool.data.models
 
 object AWSCreds {
     // TODO: Populate the aws credentials here

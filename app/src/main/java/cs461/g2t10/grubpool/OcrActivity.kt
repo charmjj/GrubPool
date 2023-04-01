@@ -31,8 +31,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import cs461.g2t10.grubpool.models.AWSCreds
-import cs461.g2t10.grubpool.models.Urls
+import cs461.g2t10.grubpool.data.models.AWSCreds
+import cs461.g2t10.grubpool.data.models.Urls
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
