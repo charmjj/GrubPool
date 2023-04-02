@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import cs461.g2t10.grubpool.ui.dealList.DealListActivity
+import cs461.g2t10.grubpool.ui.login.LoginActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,8 +14,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun shareGrub(view: View) {
-        val shareGroupIntent = Intent(this, ImageCaptureActivity::class.java)
+        val shareGroupIntent = Intent(this, LoginActivity::class.java)
         startActivity(shareGroupIntent)
+
     }
 
     fun findGrub(view: View) {

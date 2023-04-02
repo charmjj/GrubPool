@@ -29,8 +29,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
-import cs461.g2t10.grubpool.models.FoodDeal
-import cs461.g2t10.grubpool.models.Urls
+import cs461.g2t10.grubpool.data.models.FoodDeal
+import cs461.g2t10.grubpool.data.models.Urls
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
