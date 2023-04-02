@@ -53,6 +53,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
     private var foodDeals: List<FoodDeal> = listOf() // stores ALL deals
     private var nearbyFoodDeals: MutableList<FoodDeal> = mutableListOf()
     private var filteredDeals: List<FoodDeal> = listOf()
+    private var currFilterSelections: HashMap<String, MutableList<String>>? = null
 
     companion object{
         private const val LOCATION_REQUEST_CODE = 1
@@ -298,22 +299,35 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
                     nearbyFoodDeals.add(foodDeal)
                 }
             }
-            displayFoodDealMarkers(nearbyFoodDeals)
+            if (currFilterSelections == null) {
+                displayFoodDealMarkers(nearbyFoodDeals)
+            } else {
+                filterDeals(currFilterSelections!!).start()
+            }
         }
     }
 
     fun filterDeals(currentSelections: HashMap<String, MutableList<String>>): Thread { // {Cuisine=[All Cuisines], Time Listed=[All Time], Dietary Restrictions=[No Restrictions]}
-        mMap.clear()
+        runOnUiThread {
+            mMap.clear()
+            mMap.addMarker(MarkerOptions().position(mCurrLocationMarker!!.position).title(mCurrLocationMarker!!.title))
+        }
         return Thread {
             val cuisines = currentSelections["Cuisine"] as List<String>
             val restrictions = currentSelections["Dietary Restrictions"] as List<String>
             val timeListed = currentSelections["Time Listed"]?.get(0)
-            filteredDeals = nearbyFoodDeals.filter {
-                val cuisinesPass = if (cuisines.contains("All Cuisines")) true else cuisines.contains(it.cuisine)
-                val restrictionsPass = if (restrictions.contains("No Restrictions")) true else restrictions.contains(it.restriction)
-                cuisinesPass && restrictionsPass && compareTime(timeListed, it.date)
+            if (cuisines.contains("All Cuisines") && restrictions.contains("No Restrictions") && timeListed == "All Time") {
+                currFilterSelections = null
+                displayFoodDealMarkers(nearbyFoodDeals)
+            } else {
+                currFilterSelections = currentSelections
+                filteredDeals = nearbyFoodDeals.filter {
+                    val cuisinesPass = cuisines.contains(it.cuisine)
+                    val restrictionsPass = restrictions.contains(it.restriction)
+                    cuisinesPass && restrictionsPass && compareTime(timeListed, it.date)
+                }
+                displayFoodDealMarkers(filteredDeals)
             }
-            displayFoodDealMarkers(filteredDeals)
         }
     }
 
