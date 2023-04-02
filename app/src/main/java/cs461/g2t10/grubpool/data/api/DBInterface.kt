@@ -30,7 +30,7 @@ interface DbInterface {
     @POST("store/register")
     fun registerUser(
         @Body data: JsonObject
-    ): Single<JSONArray>
+    ): Single<JSONObject>
 
     @POST("store/login")
     fun loginUser(
