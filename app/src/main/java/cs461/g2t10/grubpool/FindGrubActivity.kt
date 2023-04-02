@@ -2,6 +2,7 @@ package cs461.g2t10.grubpool
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -166,12 +167,23 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
             runOnUiThread {
                 val title = foodDeal.location ?: ""
                 markerOptions.title(title)
-                mMap.addMarker(markerOptions)
+                val marker = mMap.addMarker(markerOptions)
+                marker?.tag = foodDeal.dealId
             }
         }
     }
 
-    override fun onMarkerClick(p0: Marker): Boolean = false
+    override fun onMarkerClick(marker: Marker): Boolean {
+        val dealId = marker.tag.toString()
+        if (dealId == null) {
+            return false
+        }
+        Log.d("MARKER CLICKEDDD", dealId)
+        val myIntent = Intent(this, ViewDealActivity::class.java)
+        myIntent.putExtra("dealId", dealId)
+        startActivity(myIntent)
+        return true
+    }
 
     private fun configureFilterPanel() {
         val fragment = supportFragmentManager.findFragmentById(R.id.filterPanel)
