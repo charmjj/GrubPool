@@ -89,6 +89,7 @@ class OcrActivity : AppCompatActivity() {
     }
 
     fun onSubmitItem(view: View) {
+        val intent = intent
         val inputStream = this.openFileInput(imageFilePath)
         uploadImageToS3(inputStream)
 
@@ -101,7 +102,7 @@ class OcrActivity : AppCompatActivity() {
 
         val url = "${Urls.BASE_API_ENDPOINT}/grub-deal/add"
         val requestBody = JSONObject().apply {
-            put("user_id", "")
+            put("user_id", intent.getStringExtra("USER_ID"))
             put("location", dealLocation)
             put("vendor", dealVendor)
             put("name", dealName)
@@ -127,6 +128,8 @@ class OcrActivity : AppCompatActivity() {
 
         val queue = Volley.newRequestQueue(this)
         queue.add(request)
+
+        finish()
     }
 
     private fun extractTextFromImage(bitmap: Bitmap) {

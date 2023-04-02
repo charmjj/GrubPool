@@ -1,24 +1,18 @@
 package cs461.g2t10.grubpool
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import cs461.g2t10.grubpool.models.Urls
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
+import cs461.g2t10.grubpool.data.models.Urls
 import org.json.JSONArray
-import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
-import kotlin.properties.Delegates
 
 class ViewDealActivity : AppCompatActivity() {
     private lateinit var latitude: String

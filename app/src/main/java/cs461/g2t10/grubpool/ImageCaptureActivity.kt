@@ -84,8 +84,11 @@ class ImageCaptureActivity : AppCompatActivity() {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
         stream.close()
 
+        val intent = intent
         ocrIntent.putExtra("imageFilePath", currentPhotoPath)
+        ocrIntent.putExtra("USER_ID", intent.getStringExtra("USER_ID"))
         startActivity(ocrIntent)
+        finish()
     }
 
     override fun onRequestPermissionsResult(

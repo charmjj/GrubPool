@@ -52,10 +52,11 @@ class DealListActivity : AppCompatActivity(), DealsAdapter.ClickListener {
         fetchFoodDealsData(userId)
 
         // For Ruwan's ocrx button for onlick
-        val addDeal : com.google.android.material.floatingactionbutton.FloatingActionButton = findViewById(R.id.addDeal)
-        addDeal.setOnClickListener{
+        val addDeal: com.google.android.material.floatingactionbutton.FloatingActionButton =
+            findViewById(R.id.addDeal)
+        addDeal.setOnClickListener {
             val intent = Intent(this, ImageCaptureActivity::class.java)
-            intent.putExtra(USER_ID,userId)
+            intent.putExtra(USER_ID, userId)
             startActivity(intent)
 //            finish()
         }
@@ -71,8 +72,8 @@ class DealListActivity : AppCompatActivity(), DealsAdapter.ClickListener {
 
     private fun fetchFoodDealsData(id: String) {
         val api = DbClient.getClient()
-        api.getDeals(id).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread()).subscribe({
+        api.getDeals(id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
                 adapter?.addItems(it)
             }, {
                 Log.e("TAG", "onCreate: ${it.message}")
@@ -86,8 +87,7 @@ class DealListActivity : AppCompatActivity(), DealsAdapter.ClickListener {
 
     private fun showDialog(data: FoodDeal) {
         val builder = AlertDialog.Builder(this)
-        val binding =
-            DialogLayoutEditDealBinding.inflate(layoutInflater, null, false)
+        val binding = DialogLayoutEditDealBinding.inflate(layoutInflater, null, false)
         builder.setView(binding.root)
         val dialog = builder.create()
         binding.etName.setText(data.name)
@@ -111,15 +111,13 @@ class DealListActivity : AppCompatActivity(), DealsAdapter.ClickListener {
         )
 
         val cuisineAdapter = ArrayAdapter(
-            this, android.R.layout
-                .simple_spinner_item, cuisineList
+            this, android.R.layout.simple_spinner_item, cuisineList
         )
         cuisineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spCousin.adapter = cuisineAdapter
 
         val restrictionAdapter = ArrayAdapter(
-            this, android.R.layout
-                .simple_spinner_item, restrictionList
+            this, android.R.layout.simple_spinner_item, restrictionList
         )
         cuisineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spRestriction.adapter = restrictionAdapter
@@ -133,16 +131,12 @@ class DealListActivity : AppCompatActivity(), DealsAdapter.ClickListener {
                 addProperty("description", binding.etDesc.text.toString())
                 addProperty("price", binding.etWas.text.toString())
                 addProperty("discount", binding.etDiscount.text.toString())
-                add(
-                    "cuisine_ids",
-                    JsonArray().apply {
-                        add(cuisineList[binding.spCousin.selectedItemPosition].cuisine_id)
-                    }
-                )
+                add("cuisine_ids", JsonArray().apply {
+                    add(cuisineList[binding.spCousin.selectedItemPosition].cuisine_id)
+                })
                 add("restriction_ids", JsonArray().apply {
                     add(
-                        restrictionList[binding.spRestriction
-                            .selectedItemPosition].restriction_id
+                        restrictionList[binding.spRestriction.selectedItemPosition].restriction_id
                     )
                 })
             }
@@ -154,14 +148,10 @@ class DealListActivity : AppCompatActivity(), DealsAdapter.ClickListener {
 
     private fun updateFoodDealsData(data: JsonObject) {
         val api = DbClient.getClient()
-        api.updateDeals(data)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        api.updateDeals(data).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 Toast.makeText(
-                    this@DealListActivity,
-                    "Updated!",
-                    Toast.LENGTH_SHORT
+                    this@DealListActivity, "Updated!", Toast.LENGTH_SHORT
                 ).show()
                 fetchFoodDealsData(userId)
             }, {
