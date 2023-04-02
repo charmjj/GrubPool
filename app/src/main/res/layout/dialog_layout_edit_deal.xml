@@ -3,22 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="16dp">
 
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Deal Listing"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/txtLabelName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Deal Name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <EditText
         android:id="@+id/etName"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
         android:ems="10"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:hint="Name"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/txtLabelName" />
+
+    <TextView
+        android:id="@+id/txtLabelDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Deal Description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etName" />
+
 
     <EditText
         android:id="@+id/etDesc"
@@ -28,9 +55,20 @@
         android:ems="10"
         android:hint="Description"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/etName"
-        app:layout_constraintStart_toStartOf="@+id/etName"
-        app:layout_constraintTop_toBottomOf="@+id/etName" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtLabelDesc" />
+
+    <TextView
+        android:id="@+id/txtWas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Original Price($):"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etDesc" />
+
+
 
     <EditText
         android:id="@+id/etWas"
@@ -40,29 +78,36 @@
         android:ems="10"
         android:hint="Was"
         android:inputType="number"
-        app:layout_constraintEnd_toEndOf="@+id/etDesc"
-        app:layout_constraintStart_toStartOf="@+id/etDesc"
-        app:layout_constraintTop_toBottomOf="@+id/etDesc" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtWas" />
+
+    <TextView
+        android:id="@+id/txtLabelDiscount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Discount(%)"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etWas" />
 
     <EditText
         android:id="@+id/etDiscount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Discount"
         android:inputType="number"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@id/etWas"
-        app:layout_constraintEnd_toEndOf="@id/etWas"
-        app:layout_constraintTop_toBottomOf="@id/etWas"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="220dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtLabelDiscount" />
 
     <TextView
         android:id="@+id/txtRestriction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:text="Restriction"
         app:layout_constraintStart_toStartOf="@+id/etDiscount"
         app:layout_constraintTop_toBottomOf="@id/etDiscount" />
@@ -82,8 +127,8 @@
         android:id="@+id/txtCousin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Cousin"
+        android:layout_marginTop="12dp"
+        android:text="Cuisine"
         app:layout_constraintStart_toStartOf="@+id/spRestriction"
         app:layout_constraintTop_toBottomOf="@id/spRestriction" />
 
@@ -100,8 +145,8 @@
         android:id="@+id/btnUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:text="Update"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
