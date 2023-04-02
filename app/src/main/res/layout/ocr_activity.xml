@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/textlines"
-                android:hint="Enter the yummy name of your food"
+                android:hint="Enter the item name to be listed"
                 android:textColor="@color/black"
                 android:textColorHint="@color/grey" />
         </LinearLayout>
@@ -126,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/textlines"
-                android:hint="Enter a description of this snacc (Optional)"
+                android:hint="Enter a description (Optional)"
                 android:textColor="@color/black"
                 android:textColorHint="@color/grey" />
         </LinearLayout>
