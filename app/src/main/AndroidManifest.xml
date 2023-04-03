@@ -71,6 +71,7 @@
             android:exported="false"/>
         <activity
             android:name=".FindGrubActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

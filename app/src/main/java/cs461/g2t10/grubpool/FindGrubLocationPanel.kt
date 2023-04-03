@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -32,11 +33,12 @@ class FindGrubLocationPanel : Fragment() {
         val view = inflater.inflate(R.layout.fragment_find_grub_location_panel, container, false)
         searchField = view.findViewById(R.id.et_search)
         val locationPanelBehavior = (activity as FindGrubActivity).locationPanelBehavior
-        searchField.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) {
-                locationPanelBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
-            }
-        }
+//        searchField.setOnFocusChangeListener { view, hasFocus ->
+//            if (hasFocus) {
+//                locationPanelBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+//            }
+//        }
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         val button = view.findViewById(R.id.searchBtn) as Button
         button.setOnClickListener {
             searchLocation()
