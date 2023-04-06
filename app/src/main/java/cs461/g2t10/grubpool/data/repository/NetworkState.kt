@@ -1,14 +1,10 @@
 package cs461.g2t10.grubpool.repository
 
-enum class Status{
-    RUNNING,
-    SUCCESS,
-    FAILED
+enum class Status {
+    RUNNING, SUCCESS, FAILED
 }
 
-
-
-class NetworkState(val status: Status, val msg:String) {
+class NetworkState(val status: Status, val msg: String) {
     companion object {
         val LOADED: NetworkState
         val LOADING: NetworkState

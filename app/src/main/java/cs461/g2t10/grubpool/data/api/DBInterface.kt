@@ -14,11 +14,6 @@ import retrofit2.http.Path
 
 interface DbInterface {
 
-//    val api "https://gepzvdvxai.execute-api.ap-southeast-1.amazonaws.com/api/grub-deal/store/charmjj";
-//
-//    const val S3_BASE_URL = "https://mobile-legend-thumbnails.s3.ap-southeast-1.amazonaws.com/"
-//    const val BASE_API_ENDPOINT = "https://gepzvdvxai.execute-api.ap-southeast-1.amazonaws.com/api"
-
     @GET("grub-deal/store/{user_id}")
     fun getDeals(@Path("user_id") id: String): Single<List<FoodDeal>>
 

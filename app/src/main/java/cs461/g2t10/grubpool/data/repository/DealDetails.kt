@@ -11,16 +11,19 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 
-class DealDetails(private val apiService : DbInterface, private val compositeDisposable : CompositeDisposable) {
+class DealDetails(
+    private val apiService: DbInterface,
+    private val compositeDisposable: CompositeDisposable
+) {
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _getDealsByStore = MutableLiveData <List<FoodDeal>>()
+    private val _getDealsByStore = MutableLiveData<List<FoodDeal>>()
     val getDealsByStore: LiveData<List<FoodDeal>>
         get() = _getDealsByStore
 
-    fun fetchDealDetails(userId : String) {
+    fun fetchDealDetails(userId: String) {
         _networkState.postValue(NetworkState.LOADING)
 
         try {
@@ -28,7 +31,8 @@ class DealDetails(private val apiService : DbInterface, private val compositeDis
                 apiService.getDeals(userId)
                     .subscribeOn(io())
                     .subscribe(
-                        { _getDealsByStore.postValue(it)
+                        {
+                            _getDealsByStore.postValue(it)
                             _networkState.postValue(NetworkState.LOADED)
                         }, {
                             _networkState.postValue(NetworkState.ERROR)
@@ -37,7 +41,7 @@ class DealDetails(private val apiService : DbInterface, private val compositeDis
                     )
             )
 
-        } catch(e: java.lang.Exception) {
+        } catch (e: java.lang.Exception) {
 
         }
 

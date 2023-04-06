@@ -51,14 +51,12 @@ class DealListActivity : AppCompatActivity(), DealsAdapter.ClickListener {
 
         fetchFoodDealsData(userId)
 
-        // For Ruwan's ocrx button for onlick
         val addDeal: com.google.android.material.floatingactionbutton.FloatingActionButton =
             findViewById(R.id.addDeal)
         addDeal.setOnClickListener {
             val intent = Intent(this, ImageCaptureActivity::class.java)
             intent.putExtra(USER_ID, userId)
             startActivity(intent)
-//            finish()
         }
 
     }
