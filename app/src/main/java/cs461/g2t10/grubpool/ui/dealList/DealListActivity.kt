@@ -4,37 +4,22 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import cs461.g2t10.grubpool.ImageCaptureActivity
 import cs461.g2t10.grubpool.R
-import cs461.g2t10.grubpool.data.api.BASE_API_ENDPOINT
 import cs461.g2t10.grubpool.data.api.DbClient
-import cs461.g2t10.grubpool.data.api.DbInterface
 import cs461.g2t10.grubpool.data.models.CuisineModel
 import cs461.g2t10.grubpool.data.models.FoodDeal
 import cs461.g2t10.grubpool.data.models.RestrictionModel
-import cs461.g2t10.grubpool.data.models.Urls
 import cs461.g2t10.grubpool.databinding.ActivityDealListBinding
 import cs461.g2t10.grubpool.databinding.DialogLayoutEditDealBinding
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.json.JSONObject
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import java.io.InputStreamReader
-import java.net.URL
-import java.net.URLEncoder
-import javax.net.ssl.HttpsURLConnection
 
 class DealListActivity : AppCompatActivity(), DealsAdapter.ClickListener {
     private var adapter: DealsAdapter? = null
@@ -58,7 +43,6 @@ class DealListActivity : AppCompatActivity(), DealsAdapter.ClickListener {
             intent.putExtra(USER_ID, userId)
             startActivity(intent)
         }
-
     }
 
     private fun setupRecyclerView() {
@@ -75,7 +59,6 @@ class DealListActivity : AppCompatActivity(), DealsAdapter.ClickListener {
                 adapter?.addItems(it)
             }, {
                 Log.e("TAG", "onCreate: ${it.message}")
-
             })
     }
 

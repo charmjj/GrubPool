@@ -3,9 +3,7 @@ package cs461.g2t10.grubpool.data.api
 import com.google.gson.JsonObject
 import cs461.g2t10.grubpool.data.models.FoodDeal
 import io.reactivex.Single
-import org.json.JSONArray
 import org.json.JSONObject
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

@@ -14,14 +14,14 @@ const val BASE_API_ENDPOINT = "https://gepzvdvxai.execute-api.ap-southeast-1.ama
 
 object DbClient {
     fun getClient(): DbInterface {
-        val requestInterceptor = Interceptor{ chain ->
+        val requestInterceptor = Interceptor { chain ->
 
-            val url : HttpUrl = chain.request()
+            val url: HttpUrl = chain.request()
                 .url()
                 .newBuilder()
                 .build()
 
-            val request : Request = chain.request()
+            val request: Request = chain.request()
                 .newBuilder()
                 .url(url)
                 .build()

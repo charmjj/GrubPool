@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.google.gson.JsonObject
-import cs461.g2t10.grubpool.MainActivity
 import cs461.g2t10.grubpool.data.api.DbClient
 import cs461.g2t10.grubpool.databinding.ActivityLoginBinding
 import cs461.g2t10.grubpool.ui.dealList.DealListActivity
@@ -35,39 +34,32 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun openRegisterActivity(){
+    private fun openRegisterActivity() {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-    private fun openMainActivity(userId: String){
+    private fun openMainActivity(userId: String) {
         val intent = Intent(this, DealListActivity::class.java)
-        intent.putExtra(USER_ID,userId)
+        intent.putExtra(USER_ID, userId)
         startActivity(intent)
         finish()
     }
 
     private fun loginUser(data: JsonObject) {
         val api = DbClient.getClient()
-        api.loginUser(data)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        api.loginUser(data).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 val message = it.get("data")?.asString
-                if(message!="Login Successful")
-                {
+                if (message != "Login Successful") {
                     Toast.makeText(
-                        this@LoginActivity,
-                        "Login Failed!",
-                        Toast.LENGTH_SHORT
+                        this@LoginActivity, "Login Failed!", Toast.LENGTH_SHORT
                     ).show()
                     return@subscribe
                 }
                 Toast.makeText(
-                    this@LoginActivity,
-                    "Login Success!",
-                    Toast.LENGTH_SHORT
+                    this@LoginActivity, "Login Success!", Toast.LENGTH_SHORT
                 ).show()
                 openMainActivity(data["user_id"].asString)
             }, {
