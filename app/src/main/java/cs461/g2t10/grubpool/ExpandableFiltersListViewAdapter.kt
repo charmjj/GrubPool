@@ -9,11 +9,12 @@ import android.widget.ExpandableListView
 import android.widget.ImageView
 import android.widget.TextView
 
-class ExpandableFiltersListViewAdapter internal constructor(private val context: Context,
-                                                            private val filterTypesList: List<String>,
-                                                            private val filtersList: HashMap<String, List<String>>,
-                                                            private var currentSelections: HashMap<String, MutableList<String>>
-): BaseExpandableListAdapter() {
+class ExpandableFiltersListViewAdapter internal constructor(
+    private val context: Context,
+    private val filterTypesList: List<String>,
+    private val filtersList: HashMap<String, List<String>>,
+    private var currentSelections: HashMap<String, MutableList<String>>
+) : BaseExpandableListAdapter() {
 
     private var expandableListView: ExpandableListView? = null
     private var lastExpandedPosition = -1
@@ -30,7 +31,10 @@ class ExpandableFiltersListViewAdapter internal constructor(private val context:
         return filterTypesList[groupPos]
     }
 
-    override fun getChild(groupPos: Int, childPos: Int): Any { // gets DATA OBJ for specific child item
+    override fun getChild(
+        groupPos: Int, childPos: Int
+    ): Any {
+        // gets DATA OBJ for specific child item
         val parentText = this.filterTypesList[groupPos]
         val childText = this.filtersList[parentText]!![childPos]
         var selected = false
@@ -38,7 +42,6 @@ class ExpandableFiltersListViewAdapter internal constructor(private val context:
             selected = true
         }
         return Pair(childText, selected)
-        //return this.filtersList[this.filterTypesList[groupPos]]!![childPos]
     }
 
     override fun getGroupId(groupPos: Int): Long {
@@ -53,7 +56,9 @@ class ExpandableFiltersListViewAdapter internal constructor(private val context:
         return false
     }
 
-    override fun getGroupView(groupPos: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
+    override fun getGroupView(
+        groupPos: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?
+    ): View {
         if (expandableListView == null) {
             expandableListView = parent as ExpandableListView
         }
@@ -62,7 +67,8 @@ class ExpandableFiltersListViewAdapter internal constructor(private val context:
         val filterTypeTitle = getGroup(groupPos) as String
 
         if (convertView == null) {
-            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater =
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.filter_types_list, null)
         }
         val filterTypeTv = convertView!!.findViewById<TextView>(R.id.filterTypeTv)
@@ -71,14 +77,18 @@ class ExpandableFiltersListViewAdapter internal constructor(private val context:
         return convertView
     }
 
-    override fun getChildView(groupPos: Int, childPos: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
+    override fun getChildView(
+        groupPos: Int, childPos: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?
+    ): View {
         var convertView = convertView
-        val childData = getChild(groupPos, childPos) as Pair<String, Boolean> // Pair(childText, selected)
+        val childData =
+            getChild(groupPos, childPos) as Pair<String, Boolean> // Pair(childText, selected)
         val filterTitle = childData.first
         val isFilterSelected = childData.second
 
         if (convertView == null) {
-            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater =
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.filters_list, null)
         }
         val filterTv = convertView!!.findViewById<TextView>(R.id.filtersTv)
