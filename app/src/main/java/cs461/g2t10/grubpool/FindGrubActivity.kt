@@ -12,7 +12,6 @@ import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -48,14 +47,14 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    public var filterPanelBehavior: BottomSheetBehavior<View?>? = null
-    public var locationPanelBehavior: BottomSheetBehavior<View?>? = null
+    var filterPanelBehavior: BottomSheetBehavior<View?>? = null
+    var locationPanelBehavior: BottomSheetBehavior<View?>? = null
     private var foodDeals: List<FoodDeal> = listOf() // stores ALL deals
     private var nearbyFoodDeals: MutableList<FoodDeal> = mutableListOf()
     private var filteredDeals: List<FoodDeal> = listOf()
     private var currFilterSelections: HashMap<String, MutableList<String>>? = null
 
-    companion object{
+    companion object {
         private const val LOCATION_REQUEST_CODE = 1
     }
 
@@ -83,16 +82,23 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     @SuppressLint("MissingPermission")
     private fun setUpMap() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_REQUEST_CODE
+            )
             return
         }
         mMap.isMyLocationEnabled = true
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             if (location != null) {
                 lastLocation = location
-            } else { // default location = SMU SCIS
+            } else {
+                // default location = SMU SCIS
                 lastLocation = Location("gps")
                 lastLocation.latitude = 1.297795498999938
                 lastLocation.longitude = 103.84948266943248
@@ -101,9 +107,9 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
             placeMarkerOnMap(currentLatLong, null)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 14f))
         }
-     }
+    }
 
-    fun placeMarkerOnMap(currentLatLong: LatLng, location: String?) {
+    private fun placeMarkerOnMap(currentLatLong: LatLng, location: String?) {
         val markerOptions = MarkerOptions().position(currentLatLong)
         val title = location ?: "Current Location"
         markerOptions.title(title)
@@ -122,7 +128,13 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
                 val inputStreamReader = InputStreamReader(inputSystem, "UTF-8")
                 foodDeals = Gson().fromJson(inputStreamReader, Array<FoodDeal>::class.java).toList()
                 for (foodDeal in foodDeals) {
-                    if (calculateDistance(lastLocation.latitude, lastLocation.longitude, foodDeal.latitude, foodDeal.longitude) <= 5000) {
+                    if (calculateDistance(
+                            lastLocation.latitude,
+                            lastLocation.longitude,
+                            foodDeal.latitude,
+                            foodDeal.longitude
+                        ) <= 5000
+                    ) {
                         nearbyFoodDeals.add(foodDeal)
                     }
                 }
@@ -138,9 +150,9 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         val earthRadius = 6371000 // in meters
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
-        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2)
+        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(
+            Math.toRadians(lat2)
+        ) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
         val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
         return earthRadius * c
     }
@@ -149,21 +161,15 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         for (foodDeal in foodDeals) {
             val latLong = LatLng(foodDeal.latitude, foodDeal.longitude)
             var markerOptions: MarkerOptions? = null
-            if (foodDeal.imageUrl != null) {
+            markerOptions = if (foodDeal.imageUrl != null) {
                 val url = URL(imageBaseUrl + foodDeal.imageUrl)
                 val image = BitmapFactory.decodeStream(url.openConnection().getInputStream())
                 val bmp = Bitmap.createScaledBitmap(image, 85, 85, false)
-                markerOptions =
-                    MarkerOptions()
-                        .position(latLong)
-                        .icon(BitmapDescriptorFactory.fromBitmap(bmp))
+                MarkerOptions().position(latLong).icon(BitmapDescriptorFactory.fromBitmap(bmp))
             } else {
                 val image = BitmapFactory.decodeResource(resources, R.drawable.dish)
                 val bmp = Bitmap.createScaledBitmap(image, 85, 85, false)
-                markerOptions =
-                    MarkerOptions()
-                        .position(latLong)
-                        .icon(BitmapDescriptorFactory.fromBitmap(bmp))
+                MarkerOptions().position(latLong).icon(BitmapDescriptorFactory.fromBitmap(bmp))
             }
             runOnUiThread {
                 val title = foodDeal.location ?: ""
@@ -179,7 +185,6 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         if (dealId == null || dealId == "null") {
             return false
         }
-        Log.d("MARKER CLICKEDDD", dealId)
         val myIntent = Intent(this, ViewDealActivity::class.java)
         myIntent.putExtra("dealId", dealId)
         startActivity(myIntent)
@@ -225,7 +230,7 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
     override fun onBackPressed() {
         // With the reference of the BottomSheetBehavior stored
         filterPanelBehavior?.let {
-            if (it.state == BottomSheetBehavior.STATE_EXPANDED || it.state == BottomSheetBehavior.STATE_HALF_EXPANDED ) {
+            if (it.state == BottomSheetBehavior.STATE_EXPANDED || it.state == BottomSheetBehavior.STATE_HALF_EXPANDED) {
                 it.state = BottomSheetBehavior.STATE_HIDDEN
                 return
             } else {
@@ -261,19 +266,20 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
             }
         } else {
             try {
-                geoCoder.getFromLocationName(location, 1, object: Geocoder.GeocodeListener {
+                geoCoder.getFromLocationName(location, 1, object : Geocoder.GeocodeListener {
                     override fun onGeocode(addresses: MutableList<Address>) {
                         addressList = addresses
                         val address = addressList!![0]
                         updateLocationOnMap(location, address).start()
                     }
+
                     override fun onError(errorMessage: String?) {
-                        print(errorMessage!!)
+                        System.err.println("[FindGrubActivity] An error occurred: $errorMessage")
                     }
 
                 })
             } catch (e: IllegalArgumentException) { // if locationName is null
-                e.printStackTrace()
+                System.err.println("[FindGrubActivity:searchLocation] An error occurred: $e")
             }
         }
     }
@@ -303,7 +309,10 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         return Thread {
             nearbyFoodDeals.clear()
             for (foodDeal in foodDeals) {
-                if (calculateDistance(address.latitude, address.longitude, foodDeal.latitude, foodDeal.longitude) <= 5000) {
+                if (calculateDistance(
+                        address.latitude, address.longitude, foodDeal.latitude, foodDeal.longitude
+                    ) <= 5000
+                ) {
                     nearbyFoodDeals.add(foodDeal)
                 }
             }
@@ -315,10 +324,14 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         }
     }
 
-    fun filterDeals(currentSelections: HashMap<String, MutableList<String>>): Thread { // {Cuisine=[All Cuisines], Time Listed=[All Time], Dietary Restrictions=[No Restrictions]}
+    fun filterDeals(currentSelections: HashMap<String, MutableList<String>>): Thread {
+        // {Cuisine=[All Cuisines], Time Listed=[All Time], Dietary Restrictions=[No Restrictions]}
         runOnUiThread {
             mMap.clear()
-            mMap.addMarker(MarkerOptions().position(mCurrLocationMarker!!.position).title(mCurrLocationMarker!!.title))
+            mMap.addMarker(
+                MarkerOptions().position(mCurrLocationMarker!!.position)
+                    .title(mCurrLocationMarker!!.title)
+            )
         }
         return Thread {
             val cuisines = currentSelections["Cuisine"] as List<String>
@@ -339,15 +352,15 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         }
     }
 
-    private fun compareTime(selection: String?, date: Date?): Boolean { // selection = "Last Hour", "Last 3 Hours", "Last 5 Hours", "All Time"
+    private fun compareTime(
+        selection: String?, date: Date?
+    ): Boolean {
+        // selection = "Last Hour", "Last 3 Hours", "Last 5 Hours", "All Time"
         if (selection == "All Time") {
             return true
         }
-        Log.d("DATEEEE", date.toString())
         val timeIntervals = hashMapOf(
-            "Last Hour" to 1,
-            "Last 3 Hours" to 3,
-            "Last 5 Hours" to 5
+            "Last Hour" to 1, "Last 3 Hours" to 3, "Last 5 Hours" to 5
         )
         val currentDate = Date()
         val hoursElapsed = (currentDate.time - date!!.time) / 3600000

@@ -2,7 +2,6 @@ package cs461.g2t10.grubpool
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,23 +16,26 @@ class FindGrubFilteringPanel : Fragment() {
     private lateinit var listViewAdapter: ExpandableFiltersListViewAdapter
     private lateinit var filtersListView: ExpandableListView
 
-    private var filterTypesList: List<String> = listOf("Cuisine", "Dietary Restrictions", "Time Listed")
+    private var filterTypesList: List<String> =
+        listOf("Cuisine", "Dietary Restrictions", "Time Listed")
     private var filtersList: HashMap<String, List<String>> = hashMapOf()
     private val defaultSelections: HashMap<String, List<String>> = hashMapOf(
         "Cuisine" to listOf("All Cuisines"),
         "Dietary Restrictions" to listOf("No Restrictions"),
-        "Time Listed" to listOf("All Time"))
+        "Time Listed" to listOf("All Time")
+    )
     private val defaultValues: HashMap<String, String> = hashMapOf(
-        "Cuisine" to "All Cuisines",
-        "Dietary Restrictions" to "No Restrictions"
+        "Cuisine" to "All Cuisines", "Dietary Restrictions" to "No Restrictions"
     )
     private var currentSelections = HashMap<String, MutableList<String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        filtersList["Cuisine"] = listOf("Japanese", "Chinese", "Italian", "Greek", "Spanish", "Others","All Cuisines")
-        filtersList["Dietary Restrictions"] = listOf("Halal", "Vegetarian", "No Beef", "No Restrictions")
+        filtersList["Cuisine"] =
+            listOf("Japanese", "Chinese", "Italian", "Greek", "Spanish", "Others", "All Cuisines")
+        filtersList["Dietary Restrictions"] =
+            listOf("Halal", "Vegetarian", "No Beef", "No Restrictions")
         filtersList["Time Listed"] = listOf("Last Hour", "Last 3 Hours", "Last 5 Hours", "All Time")
 
         defaultSelections.forEach { (key, value) ->
@@ -42,32 +44,40 @@ class FindGrubFilteringPanel : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val context = activity as Context
         val view = inflater.inflate(R.layout.fragment_find_grub_filtering_panel, container, false)
 
-        listViewAdapter = ExpandableFiltersListViewAdapter(context, filterTypesList, filtersList, currentSelections)
+        listViewAdapter = ExpandableFiltersListViewAdapter(
+            context, filterTypesList, filtersList, currentSelections
+        )
         filtersListView = view.findViewById<ExpandableListView>(R.id.filtersListView)
         filtersListView.setAdapter(listViewAdapter)
 
         filtersListView.setOnChildClickListener { parent, view, groupPosition, childPosition, id ->
-            val adapter = parent.expandableListAdapter as ExpandableFiltersListViewAdapter // can use listViewAdapter instead?
+            val adapter =
+                parent.expandableListAdapter as ExpandableFiltersListViewAdapter // can use listViewAdapter instead?
             val filterTypeTitle = adapter.getGroup(groupPosition) as String
-            val childData = adapter.getChild(groupPosition, childPosition) as Pair<String, Boolean> // Pair(childText, selected)
+            val childData = adapter.getChild(
+                groupPosition, childPosition
+            ) as Pair<String, Boolean> // Pair(childText, selected)
             val filterValue = childData.first
 
             val checkMarkView = view.findViewById<ImageView>(R.id.checkMark)
 
             // not multi-select, unselect is only done by selecting another option
-            if (filterTypeTitle == "Time Listed" && !currentSelections[filterTypeTitle]?.contains(filterValue)!!) {
+            if (filterTypeTitle == "Time Listed" && !currentSelections[filterTypeTitle]?.contains(
+                    filterValue
+                )!!
+            ) {
                 currentSelections[filterTypeTitle]?.clear()
                 currentSelections[filterTypeTitle]?.add(filterValue)
                 listViewAdapter.updateSelections(currentSelections)
                 listViewAdapter.notifyDataSetChanged()
-            } else { // filter type falls under Cuisine or Dietary Restrictions
+            } else {
+                // filter type falls under Cuisine or Dietary Restrictions
                 // user is unselecting
                 if (currentSelections[filterTypeTitle]?.contains(filterValue)!!) {
                     // current selection is not the only selection --> then can remove
@@ -103,10 +113,9 @@ class FindGrubFilteringPanel : Fragment() {
     }
 
     private fun applyFilters() {
-        Log.d("APPLYINGGG:", currentSelections.toString())
         val filterPanelBehavior = (activity as FindGrubActivity).filterPanelBehavior
         filterPanelBehavior?.let {
-                it.state = BottomSheetBehavior.STATE_HIDDEN
+            it.state = BottomSheetBehavior.STATE_HIDDEN
         }
         (activity as FindGrubActivity).filterDeals(currentSelections).start()
     }

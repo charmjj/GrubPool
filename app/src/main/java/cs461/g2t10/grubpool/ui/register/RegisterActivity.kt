@@ -7,7 +7,6 @@ import android.util.Log
 import android.widget.Toast
 import com.google.gson.JsonObject
 import cs461.g2t10.grubpool.data.api.DbClient
-import cs461.g2t10.grubpool.databinding.ActivityLoginBinding
 import cs461.g2t10.grubpool.databinding.ActivityRegisterBinding
 import cs461.g2t10.grubpool.ui.login.LoginActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -42,14 +41,10 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun registerUser(data: JsonObject) {
         val api = DbClient.getClient()
-        api.registerUser(data)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
+        api.registerUser(data).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread()).subscribe({
                 Toast.makeText(
-                    this@RegisterActivity,
-                    "Registered!",
-                    Toast.LENGTH_SHORT
+                    this@RegisterActivity, "Registered!", Toast.LENGTH_SHORT
                 ).show()
                 openLoginActivity()
             }, {

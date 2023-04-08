@@ -73,10 +73,8 @@ class ViewDealActivity : AppCompatActivity() {
 
                         dealImage.setImageResource(R.drawable.rounded_corner)
 
-                        Glide.with(this)
-                            .load(Urls.S3_BASE_URL + dealRes.getString("image_url"))
-                            .fitCenter()
-                            .into(dealImage)
+                        Glide.with(this).load(Urls.S3_BASE_URL + dealRes.getString("image_url"))
+                            .fitCenter().into(dealImage)
                         dealImage.scaleType = ImageView.ScaleType.FIT_XY
 
                     }

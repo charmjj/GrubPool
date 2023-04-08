@@ -1,15 +1,10 @@
 package cs461.g2t10.grubpool
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,7 +12,6 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -33,7 +27,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.BufferedReader
-import java.io.File
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -61,21 +54,8 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-        // TODO: retrieve MAPS_API_KEY from local.properties
-//        val properties = Properties()
-//        val localProperties = File("/local.properties")
-//        println(localProperties.absolutePath)
-//
-//        if (localProperties.exists()) {
-//            localProperties.inputStream().use { properties.load(it) }
-//        } else {
-//            println("helphelphelp")
-//        }
-//        apiKey = properties.getProperty("MAPS_API_KEY")
     }
 
     /**
@@ -86,20 +66,23 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this, android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             // Obtain current location's coordinates
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     oriLat = location.latitude.toString()
                     oriLong = location.longitude.toString()
-                    println(oriLat)
-                    println(oriLong)
                     getDirections(mMap)
                 }
             }
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+            ActivityCompat.requestPermissions(
+                this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 1
+            )
         }
     }
 
@@ -107,13 +90,9 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
         origin = "$oriLat,$oriLong"
         destination = "$desLat,$desLong"
         apiKey = "AIzaSyCJUfpuEzgmkUnxmB9A3zFl5G4YtPMWmNk"
-        println(origin)
-        println(destination)
 
-        val urlString = "https://maps.googleapis.com/maps/api/directions/json?" +
-                "origin=$origin" +
-                "&destination=$destination" +
-                "&key=$apiKey"
+        val urlString =
+            "https://maps.googleapis.com/maps/api/directions/json?" + "origin=$origin" + "&destination=$destination" + "&key=$apiKey"
 
         // Perform network operation on separate thread by using Kotlin Coroutines
         GlobalScope.launch {
@@ -154,10 +133,10 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
                 // Add markers to the map to indicate the start and end points of the route
                 val startLocation = leg.getJSONObject("start_location")
                 val endLocation = leg.getJSONObject("end_location")
-                val startLatLng = LatLng(startLocation.getDouble("lat"), startLocation.getDouble("lng"))
+                val startLatLng =
+                    LatLng(startLocation.getDouble("lat"), startLocation.getDouble("lng"))
                 val endLatLng = LatLng(endLocation.getDouble("lat"), endLocation.getDouble("lng"))
                 mMap.addMarker(MarkerOptions().position(startLatLng).title("Your Location"))
-                // TODO: Replace marker title with shop name
                 mMap.addMarker(MarkerOptions().position(endLatLng).title("Your Destination"))
 
                 // Set the camera position to center on the route

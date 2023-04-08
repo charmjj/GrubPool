@@ -19,12 +19,10 @@ class DealsAdapter : RecyclerView.Adapter<DealsAdapter.DealViewHolder>() {
     var listener: ClickListener? = null
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+        parent: ViewGroup, viewType: Int
     ): DealViewHolder {
         val itemView = DealsItemBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent, false
+            LayoutInflater.from(parent.context), parent, false
         )
         return DealViewHolder(itemView, listener)
     }
@@ -42,15 +40,15 @@ class DealsAdapter : RecyclerView.Adapter<DealsAdapter.DealViewHolder>() {
     }
 
     class DealViewHolder(
-        private val binding: DealsItemBinding,
-        private val listener: ClickListener?
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+        private val binding: DealsItemBinding, private val listener: ClickListener?
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: FoodDeal) = with(binding) {
             val context = root.context
             dealName.text = data.name
             dealDescription.text = data.description
-            finalPrice.text = "$" + context.getString(R.string.dollar_value, ((100 - data.discount) * data.price) / 100)
+            finalPrice.text = "$" + context.getString(
+                R.string.dollar_value, ((100 - data.discount) * data.price) / 100
+            )
             originalPrice.text = "$" + context.getString(R.string.dollar_value, data.price)
             discount.text = context.getString(R.string.percent_value, data.discount, "%")
             dealTime.text = data.date?.format()
@@ -69,16 +67,14 @@ class DealsAdapter : RecyclerView.Adapter<DealsAdapter.DealViewHolder>() {
 
 fun Date?.format(): String {
     return try {
-//        val sdf = SimpleDateFormat("DD/MM/YYYY")
-//        sdf.format(this)
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
         val stringUnformatted = sdf.format(this)
-//        return sdf.format(date)
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
         val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         val date = LocalDateTime.parse(stringUnformatted, inputFormatter)
         return date.format(outputFormatter)
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        System.err.println("[ui:dealList:DealsAdapter] An error occurred formatting datetime: $e")
         ""
     }
 }
