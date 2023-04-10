@@ -187,6 +187,8 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
         }
         val myIntent = Intent(this, ViewDealActivity::class.java)
         myIntent.putExtra("dealId", dealId)
+        myIntent.putExtra("lat", lastLocation.latitude)
+        myIntent.putExtra("long", lastLocation.longitude)
         startActivity(myIntent)
         return true
     }
