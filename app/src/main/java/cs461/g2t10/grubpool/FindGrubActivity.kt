@@ -42,8 +42,8 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
     private val imageBaseUrl: String = Urls.S3_BASE_URL
 
     private lateinit var mMap: GoogleMap
-    private lateinit var lastLocation: Location // user's actual live location
-    private var mCurrLocationMarker: Marker? = null
+    internal lateinit var lastLocation: Location // on app start: user's actual live location
+    internal var mCurrLocationMarker: Marker? = null
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -182,11 +182,13 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
 
     override fun onMarkerClick(marker: Marker): Boolean {
         val dealId = marker.tag.toString()
-        if (dealId == null) {
+        if (dealId == null || dealId == "null") {
             return false
         }
         val myIntent = Intent(this, ViewDealActivity::class.java)
         myIntent.putExtra("dealId", dealId)
+        myIntent.putExtra("lat", lastLocation.latitude)
+        myIntent.putExtra("long", lastLocation.longitude)
         startActivity(myIntent)
         return true
     }
@@ -285,6 +287,14 @@ class FindGrubActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMa
     }
 
     fun updateLocationOnMap(location: String, address: Address): Thread {
+        // update last location
+        val latitude = address.latitude
+        val longitude = address.longitude
+        val newLocation = Location("")
+        newLocation.latitude = latitude
+        newLocation.longitude = longitude
+        lastLocation = newLocation
+
         val latLng = LatLng(address.latitude, address.longitude)
         locationPanelBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
 

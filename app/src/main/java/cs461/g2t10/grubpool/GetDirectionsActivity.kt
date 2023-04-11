@@ -31,6 +31,7 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
+import kotlin.properties.Delegates
 
 class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -43,12 +44,16 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var oriLong: String
     private lateinit var desLat: String
     private lateinit var desLong: String
+    private var currentLat by Delegates.notNull<Double>()
+    private var currentLong by Delegates.notNull<Double>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val it = intent
         desLat = it.getStringExtra("latitude").toString()
         desLong = it.getStringExtra("longitude").toString()
+        currentLat = it.getDoubleExtra("currentLat", 0.0)
+        currentLong = it.getDoubleExtra("currentLong", 0.0)
 
         binding = ActivityGetDirectionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -65,29 +70,31 @@ class GetDirectionsActivity : AppCompatActivity(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        getDirections(mMap)
 
-        if (ContextCompat.checkSelfPermission(
-                this, android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            // Obtain current location's coordinates
-            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                if (location != null) {
-                    oriLat = location.latitude.toString()
-                    oriLong = location.longitude.toString()
-                    getDirections(mMap)
-                }
-            }
-        } else {
-            ActivityCompat.requestPermissions(
-                this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 1
-            )
-        }
+//        if (ContextCompat.checkSelfPermission(
+//                this, android.Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED
+//        ) {
+//            // Obtain current location's coordinates
+//            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+//            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+//                if (location != null) {
+//                    oriLat = location.latitude.toString()
+//                    oriLong = location.longitude.toString()
+//                    getDirections(mMap)
+//                }
+//            }
+//        } else {
+//            ActivityCompat.requestPermissions(
+//                this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 1
+//            )
+//        }
     }
 
     private fun getDirections(googleMap: GoogleMap) {
-        origin = "$oriLat,$oriLong"
+        // origin = "$oriLat,$oriLong"
+        origin = "$currentLat,$currentLong"
         destination = "$desLat,$desLong"
         apiKey = "AIzaSyCJUfpuEzgmkUnxmB9A3zFl5G4YtPMWmNk"
 

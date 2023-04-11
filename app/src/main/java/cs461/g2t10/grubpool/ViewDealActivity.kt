@@ -17,11 +17,12 @@ import javax.net.ssl.HttpsURLConnection
 class ViewDealActivity : AppCompatActivity() {
     private lateinit var latitude: String
     private lateinit var longitude: String
+    private lateinit var it : Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_deal)
-        val it = intent
+        it = intent
 
         // Receives an Intent with item ID
         val dealId = it.getStringExtra("dealId")
@@ -36,6 +37,8 @@ class ViewDealActivity : AppCompatActivity() {
         val myIntent = Intent(this, GetDirectionsActivity::class.java)
         myIntent.putExtra("latitude", latitude)
         myIntent.putExtra("longitude", longitude)
+        myIntent.putExtra("currentLat", it.getDoubleExtra("lat", 0.0))
+        myIntent.putExtra("currentLong", it.getDoubleExtra("long", 0.0))
         startActivity(myIntent)
     }
 
